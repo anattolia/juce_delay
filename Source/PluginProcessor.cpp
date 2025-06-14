@@ -162,10 +162,12 @@ void MiauDelay::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    delay.process(buffer, *apvts.getRawParameterValue("DelayTime"), totalNumInputChannels);
+   
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
+
+    delay.process(buffer, *apvts.getRawParameterValue("DelayTime"), totalNumInputChannels);
 }
 
 //==============================================================================

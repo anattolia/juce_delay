@@ -51,12 +51,6 @@ void Delay::prepare(double sampleRate, int samplesPerBlock)
 }
 
 void Delay::process(juce::AudioBuffer<float>& buffer, int delayTimeMs, int numInputChannels) {
-  /* auto totalNumInputChannels = juce::AudioProcessor::getTotalNumInputChannels;
-    auto totalNumOutputChannels = juce::AudioProcessor::getTotalNumOutputChannels;
-
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; i++)
-        buffer.clear(i, 0, buffer.getNumSamples());
-*/
     const int bufferLength = buffer.getNumSamples();
     const int delayBufferLength = mDelayBuffer.getNumSamples();
 
