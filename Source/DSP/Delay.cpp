@@ -13,6 +13,11 @@
 Delay::Delay() {};
 Delay::~Delay() {};
 
+void Delay::setDelayTimeValue(float newDelayTimeValue) {
+    delayTimeMsValue = newDelayTimeValue;
+
+}
+
 void Delay::fillDelayBuffer(int channel, const int bufferLength, const int delayBufferLength, const float* bufferData, const float* delayBufferData)
 {
     // Copiar los datos del buffer al delay buffer
@@ -29,8 +34,7 @@ void Delay::fillDelayBuffer(int channel, const int bufferLength, const int delay
 
 void Delay::getFromDelayBuffer(juce::AudioBuffer<float>& buffer, int channel, const int bufferLength, const int delayBufferLength, const float* bufferData, const float* delayBufferData)
 {
-    delayTimeMs = 120; // Tiempo de delay en milisegundos
-    const int readPosition = static_cast<int> (delayBufferLength + mWritePosition - (mSampleRate * delayTimeMs / 1000)) % delayBufferLength;
+    const int readPosition = static_cast<int> (delayBufferLength + mWritePosition - (mSampleRate * delayTimeMsValue / 1000)) % delayBufferLength;
 
     if (delayBufferLength > bufferLength + readPosition) {
         buffer.addFrom(channel, 0, delayBufferData + readPosition, bufferLength);
@@ -45,7 +49,7 @@ void Delay::getFromDelayBuffer(juce::AudioBuffer<float>& buffer, int channel, co
 void Delay::prepare(double sampleRate, int samplesPerBlock)
 {
 	const int numInputChannels = 2; // Assuming stereo buffer
-	const int delayBufferSize = 2 * (sampleRate + samplesPerBlock); // the number of seconds available for the delay
+	const int delayBufferSize = 5 * (sampleRate + samplesPerBlock); // the number of seconds available for the delay
 	mSampleRate = sampleRate;
 	mDelayBuffer.setSize(numInputChannels, delayBufferSize);
 }
@@ -54,7 +58,6 @@ void Delay::process(juce::AudioBuffer<float>& buffer, int delayTimeMs, int numIn
     const int bufferLength = buffer.getNumSamples();
     const int delayBufferLength = mDelayBuffer.getNumSamples();
 
-    //  for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
     for (int channel = 0; channel < numInputChannels; ++channel)
     {
         const float* bufferData = buffer.getReadPointer(channel);

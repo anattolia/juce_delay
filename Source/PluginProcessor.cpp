@@ -34,7 +34,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MiauDelay::createParameters(
     
 
     // Parámetros del tiempo del delay
-    parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "DelayTime", 1 }, "DelayTime", 0, 5000, 500));
+    parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "DelayTime", 1 }, "DelayTime", 0, 5000, 250));
 
     return parameters;
 }
@@ -104,14 +104,6 @@ void MiauDelay::changeProgramName (int index, const juce::String& newName)
 //==============================================================================
 void MiauDelay::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-  /* // Hacer un nuevo buffer
-	const int numInputChannels = getTotalNumInputChannels();
-    const int delayBufferSize = 2 * (sampleRate + samplesPerBlock); // el número son los segundos disponibles para el delay
-    mSampleRate = sampleRate;
-
-	mDelayBuffer.setSize(numInputChannels, delayBufferSize); // Assuming stereo buffer
-    */
-
 	delay.prepare(sampleRate, samplesPerBlock);
 }
 
@@ -151,7 +143,8 @@ void MiauDelay::updateParameters()
 {
     float inDelayTime = *apvts.getRawParameterValue("DelayTime");
     
-   // delayTime.setDelayTimeValue(inDelayTime);
+   delay.setDelayTimeValue(inDelayTime);
+   DBG( "b" << inDelayTime);
 }
 
 void MiauDelay::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -161,8 +154,6 @@ void MiauDelay::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-
-   
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
@@ -178,7 +169,7 @@ bool MiauDelay::hasEditor() const
 
 juce::AudioProcessorEditor* MiauDelay::createEditor()
 {
-    return new NewProjectAudioProcessorEditor (*this);
+    return new MiauDelayAudioProcessorEditor (*this);
 }
 
 //==============================================================================

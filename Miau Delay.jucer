@@ -3,9 +3,14 @@
 <JUCERPROJECT id="iR16WE" name="Miau Delay" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" companyName="coclealala">
   <MAINGROUP id="F2Abqu" name="Miau Delay">
+    <GROUP id="{EC29E0F4-7DFE-3DFF-CEF9-0E57BB25BA0F}" name="Assets">
+      <FILE id="dMCuoF" name="miau.png" compile="0" resource="1" file="Assets/miau.png"/>
+    </GROUP>
+    <GROUP id="{AC62B72A-AFCB-8D19-B28D-4B0F8F8859AA}" name="DSP">
+      <FILE id="yzJBRk" name="Delay.cpp" compile="1" resource="0" file="Source/DSP/Delay.cpp"/>
+      <FILE id="FBt6V8" name="Delay.h" compile="0" resource="0" file="Source/DSP/Delay.h"/>
+    </GROUP>
     <GROUP id="{62D429DE-9689-3AA8-DB89-EDE6F6FEF9D1}" name="Source">
-      <FILE id="YHDXVB" name="Delay.cpp" compile="1" resource="0" file="Source/Delay.cpp"/>
-      <FILE id="ku6CEV" name="Delay.h" compile="0" resource="0" file="Source/Delay.h"/>
       <FILE id="rZyZYf" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="mtKgaJ" name="PluginProcessor.h" compile="0" resource="0"
@@ -35,7 +40,7 @@
   <EXPORTFORMATS>
     <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="NewProject" enablePluginBinaryCopyStep="1"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Miau Delay" enablePluginBinaryCopyStep="1"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="NewProject"/>
       </CONFIGURATIONS>
       <MODULEPATHS>

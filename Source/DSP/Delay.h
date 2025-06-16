@@ -17,6 +17,8 @@ public:
 	Delay();
 	~Delay();
 
+	void setDelayTimeValue(float newDelayTimeValue);
+
 	void prepare(double sampleRate, int samplesPerBlock);
 
 	void process(juce::AudioBuffer<float>& buffer, int delayTimeMs, int numInputChannels);
@@ -30,6 +32,6 @@ private:
 	int mWritePosition{ 0 };
 	int mSampleRate{ 44100 };
 
-	int delayTimeMs{ 250 };
+	int delayTimeMsValue;
 
 };
