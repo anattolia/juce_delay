@@ -10,31 +10,57 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-NewProjectAudioProcessorEditor::NewProjectAudioProcessorEditor (MiauDelay& p)
+MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor (MiauDelay& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
+    // Background
+    backgroundImage = juce::ImageFileFormat::loadFrom(BinaryData::miau_png, BinaryData::miau_pngSize);
+    backgroundComponent.setImage(backgroundImage);
+    addAndMakeVisible(backgroundComponent);
+
+    // Delay time slider
+    prepareSlider(delayTimeSlider);
+    delayTimeAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DelayTime", delayTimeSlider);
+
+
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (700, 500);
 }
 
-NewProjectAudioProcessorEditor::~NewProjectAudioProcessorEditor()
+MiauDelayAudioProcessorEditor::~MiauDelayAudioProcessorEditor()
 {
+  //  delayTimeSlider.setLookAndFeel(nullptr);
+  //  delayTimeSlider.removeListener(this);
+}
+
+void MiauDelayAudioProcessorEditor::prepareSlider(juce::Slider& slider)
+{
+    slider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    slider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    addAndMakeVisible(slider);
+
+   //slider.setLookAndFeel(&knobLookAndFeel);
+   slider.addListener(this);
 }
 
 //==============================================================================
-void NewProjectAudioProcessorEditor::paint (juce::Graphics& g)
+void MiauDelayAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    g.setColour (juce::Colours::white);
-    g.setFont (juce::FontOptions (15.0f));
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
 }
 
-void NewProjectAudioProcessorEditor::resized()
+void MiauDelayAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    backgroundComponent.setBounds(getLocalBounds());
+
+    delayTimeSlider.setBounds(100, 300, 100, 100);
+}
+
+void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)
+{
+    if (s == &delayTimeSlider)
+    {
+        //DBG("slider changed");
+       DBG ("Slider changed: " << delayTimeSlider.getValue());
+    }
 }

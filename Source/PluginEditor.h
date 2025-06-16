@@ -14,20 +14,30 @@
 //==============================================================================
 /**
 */
-class NewProjectAudioProcessorEditor  : public juce::AudioProcessorEditor
+class MiauDelayAudioProcessorEditor : public juce::AudioProcessorEditor, public juce::Slider::Listener
 {
 public:
-    NewProjectAudioProcessorEditor (MiauDelay&);
-    ~NewProjectAudioProcessorEditor() override;
+    MiauDelayAudioProcessorEditor (MiauDelay&);
+    ~MiauDelayAudioProcessorEditor() override;
 
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
 
+    void sliderValueChanged(juce::Slider*) override;
+
+	// Función para preparar los sliders
+    void prepareSlider(juce::Slider& slider);
+
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
     MiauDelay& audioProcessor;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NewProjectAudioProcessorEditor)
+    juce::Slider delayTimeSlider; //inGainSlider, dryWetSlider, feedbackSlider, dryWetSlider, outGainSlider, hpfSlider, lpfSlider, lfoSlider;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>  delayTimeAttach; //gainAttach, rateAttach, panAttach, dryWetAttach;
+
+
+    juce::Image backgroundImage;
+    juce::ImageComponent backgroundComponent;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MiauDelayAudioProcessorEditor)
 };
