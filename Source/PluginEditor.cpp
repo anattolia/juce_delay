@@ -30,17 +30,18 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor (MiauDelay& p)
 
 MiauDelayAudioProcessorEditor::~MiauDelayAudioProcessorEditor()
 {
-  //  delayTimeSlider.setLookAndFeel(nullptr);
-  //  delayTimeSlider.removeListener(this);
+  delayTimeSlider.setLookAndFeel(nullptr);
+  delayTimeSlider.removeListener(this);
 }
 
 void MiauDelayAudioProcessorEditor::prepareSlider(juce::Slider& slider)
 {
-    slider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    slider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    slider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
+    slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     addAndMakeVisible(slider);
-
-   //slider.setLookAndFeel(&knobLookAndFeel);
+	
+ 
+   slider.setLookAndFeel(&sliderLookAndFeel);
    slider.addListener(this);
 }
 
@@ -53,14 +54,13 @@ void MiauDelayAudioProcessorEditor::resized()
 {
     backgroundComponent.setBounds(getLocalBounds());
 
-    delayTimeSlider.setBounds(100, 300, 100, 100);
+    delayTimeSlider.setBounds(78, 170, 178, 42);
 }
 
 void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)
 {
     if (s == &delayTimeSlider)
     {
-        //DBG("slider changed");
-       DBG ("Slider changed: " << delayTimeSlider.getValue());
+       //DBG ("Slider changed: " << delayTimeSlider.getValue());
     }
 }

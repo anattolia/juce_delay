@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "../LookAndFeel/SliderLookAndFeel.h"
 
 //==============================================================================
 /**
@@ -38,6 +39,8 @@ private:
 
     juce::Image backgroundImage;
     juce::ImageComponent backgroundComponent;
+
+    SliderLookAndFeel sliderLookAndFeel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MiauDelayAudioProcessorEditor)
 };
