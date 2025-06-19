@@ -10,6 +10,8 @@
 
 #include <JuceHeader.h>
 #include "DSP/Delay.h"
+#include "DSP/DryWet.h"
+#include "DSP/Gain.h"
 
 //==============================================================================
 /**
@@ -56,21 +58,18 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-   // void DelayPrueba::fillDelayBuffer(int channel, const int bufferLength, const int delayBufferLength, const float* bufferData, const float* delayBufferData);
-   // void DelayPrueba::getFromDelayBuffer(juce::AudioBuffer<float>& buffer, int channel, const int bufferLength, const int delatyBufferLength, const float* bufferData, const float* delayBufferData);
-
     juce::AudioProcessorValueTreeState apvts;
 	juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
 
     void updateParameters();
     
-
 private:
-   // juce::AudioBuffer<float> mDelayBuffer;
-   // int mWritePosition{ 0 };
-   // int mSampleRate{ 44100 };
     Delay delay;
+    DryWet dryWet;
+    Gain inputGain;
+    Gain outputGain;
     
+    juce::AudioBuffer<float> dryBuffer;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MiauDelay)

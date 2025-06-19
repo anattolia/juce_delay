@@ -8,11 +8,15 @@
             file="LookAndFeel/SliderLookAndFeel.h"/>
     </GROUP>
     <GROUP id="{EC29E0F4-7DFE-3DFF-CEF9-0E57BB25BA0F}" name="Assets">
-      <FILE id="DlpmpN" name="miau.png" compile="0" resource="1" file="Assets/miau.png"/>
+      <FILE id="FYY3Rf" name="miau.png" compile="0" resource="1" file="Assets/miau.png"/>
     </GROUP>
     <GROUP id="{AC62B72A-AFCB-8D19-B28D-4B0F8F8859AA}" name="DSP">
       <FILE id="yzJBRk" name="Delay.cpp" compile="1" resource="0" file="Source/DSP/Delay.cpp"/>
       <FILE id="FBt6V8" name="Delay.h" compile="0" resource="0" file="Source/DSP/Delay.h"/>
+      <FILE id="WyKXB8" name="DryWet.cpp" compile="1" resource="0" file="Source/DSP/DryWet.cpp"/>
+      <FILE id="sY1a7I" name="DryWet.h" compile="0" resource="0" file="Source/DSP/DryWet.h"/>
+      <FILE id="vrPJw9" name="Gain.cpp" compile="1" resource="0" file="Source/DSP/Gain.cpp"/>
+      <FILE id="yyQbif" name="Gain.h" compile="0" resource="0" file="Source/DSP/Gain.h"/>
     </GROUP>
     <GROUP id="{62D429DE-9689-3AA8-DB89-EDE6F6FEF9D1}" name="Source">
       <FILE id="rZyZYf" name="PluginProcessor.cpp" compile="1" resource="0"

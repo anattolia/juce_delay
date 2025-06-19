@@ -22,6 +22,18 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor (MiauDelay& p)
     prepareSlider(delayTimeSlider);
     delayTimeAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DelayTime", delayTimeSlider);
 
+    // DryWet slider
+    prepareSlider(dryWetSlider);
+    dryWetAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DryWet", dryWetSlider);
+
+    // inputGain slider
+    prepareSlider(inputGainSlider);
+    inputGainAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "InputGain", inputGainSlider);
+    
+    // outputGain slider
+    prepareSlider(outputGainSlider);
+    outputGainAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "OutputGain", outputGainSlider);
+
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -32,6 +44,15 @@ MiauDelayAudioProcessorEditor::~MiauDelayAudioProcessorEditor()
 {
   delayTimeSlider.setLookAndFeel(nullptr);
   delayTimeSlider.removeListener(this);
+
+  dryWetSlider.setLookAndFeel(nullptr);
+  dryWetSlider.removeListener(this);
+
+  inputGainSlider.setLookAndFeel(nullptr);
+  inputGainSlider.removeListener(this);
+
+  outputGainSlider.setLookAndFeel(nullptr);
+  outputGainSlider.removeListener(this);
 }
 
 void MiauDelayAudioProcessorEditor::prepareSlider(juce::Slider& slider)
@@ -39,8 +60,7 @@ void MiauDelayAudioProcessorEditor::prepareSlider(juce::Slider& slider)
     slider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
     slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
     addAndMakeVisible(slider);
-	
- 
+
    slider.setLookAndFeel(&sliderLookAndFeel);
    slider.addListener(this);
 }
@@ -54,13 +74,16 @@ void MiauDelayAudioProcessorEditor::resized()
 {
     backgroundComponent.setBounds(getLocalBounds());
 
-    delayTimeSlider.setBounds(78, 170, 178, 42);
+    delayTimeSlider.setBounds(78, 167, 173, 42);
+	dryWetSlider.setBounds(418, 346, 173, 42);
+    inputGainSlider.setBounds(418, 55, 173, 42);
+    outputGainSlider.setBounds(418, 428, 173, 42);
 }
 
 void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)
 {
-    if (s == &delayTimeSlider)
+    if (s == &inputGainSlider)
     {
-       //DBG ("Slider changed: " << delayTimeSlider.getValue());
+       DBG ("input Slider changed: " << dryWetSlider.getValue());
     }
 }

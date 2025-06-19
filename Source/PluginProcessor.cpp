@@ -35,6 +35,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout MiauDelay::createParameters(
 
     // Parámetros del tiempo del delay
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "DelayTime", 1 }, "DelayTime", 0, 5000, 250));
+    parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "DryWet", 1 }, "DryWet", 0.0f, 1.0f, 0.5f));
+    parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "InputGain", 1 }, "InputGain", 0.0f, 2.0f, 1.0f));
+    parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "OutputGain", 1 }, "OutputGain", 0.0f, 2.0f, 1.0f));
 
     return parameters;
 }
@@ -141,15 +144,22 @@ bool MiauDelay::isBusesLayoutSupported (const BusesLayout& layouts) const
 
 void MiauDelay::updateParameters()
 {
-    float inDelayTime = *apvts.getRawParameterValue("DelayTime");
+    float inDelayTimeValue = *apvts.getRawParameterValue("DelayTime");
+    float inDryWetValue = *apvts.getRawParameterValue("DryWet");
+    float inInputGainValue = *apvts.getRawParameterValue("InputGain");
+    float inOutputGainValue = *apvts.getRawParameterValue("OutputGain");
     
-   delay.setDelayTimeValue(inDelayTime);
-   DBG( "b" << inDelayTime);
+   delay.setDelayTimeValue(inDelayTimeValue);
+   dryWet.setDryWetValue(inDryWetValue);
+   inputGain.setGainValue(inInputGainValue);
+   outputGain.setGainValue(inOutputGainValue);
 }
 
 void MiauDelay::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     updateParameters();
+
+    dryBuffer.makeCopyOf(buffer);
 
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
@@ -159,6 +169,9 @@ void MiauDelay::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
         buffer.clear(i, 0, buffer.getNumSamples());
 
     delay.process(buffer, *apvts.getRawParameterValue("DelayTime"), totalNumInputChannels);
+    dryWet.process(dryBuffer, buffer);
+    inputGain.process(buffer);
+    outputGain.process(buffer);
 }
 
 //==============================================================================
@@ -175,15 +188,22 @@ juce::AudioProcessorEditor* MiauDelay::createEditor()
 //==============================================================================
 void MiauDelay::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    std::unique_ptr<juce::XmlElement> xml(apvts.state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void MiauDelay::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+    {
+        if (xmlState->hasTagName(apvts.state.getType()))
+        {
+            auto state = juce::ValueTree::fromXml(*xmlState);
+            apvts.replaceState(state);
+        }
+    }
 }
 
 //==============================================================================
