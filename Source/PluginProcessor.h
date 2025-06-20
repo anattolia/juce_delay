@@ -12,6 +12,7 @@
 #include "DSP/Delay.h"
 #include "DSP/DryWet.h"
 #include "DSP/Gain.h"
+#include "DSP/Filter.h"
 
 //==============================================================================
 /**
@@ -68,6 +69,8 @@ private:
     DryWet dryWet;
     Gain inputGain;
     Gain outputGain;
+    Filter hpf;
+    Filter lpf;
     
     juce::AudioBuffer<float> dryBuffer;
 

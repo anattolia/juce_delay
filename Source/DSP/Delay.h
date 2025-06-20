@@ -21,7 +21,7 @@ public:
 
 	void prepare(double sampleRate, int samplesPerBlock);
 
-	void process(juce::AudioBuffer<float>& buffer, int delayTimeMs, int numInputChannels);
+	void process(juce::AudioBuffer<float>& buffer, int numInputChannels);
 
 	void fillDelayBuffer(int channel, const int bufferLength, const int delayBufferLength, const float* bufferData, const float* delayBufferData);
 	void getFromDelayBuffer(juce::AudioBuffer<float>& buffer, int channel, const int bufferLength, const int delatyBufferLength, const float* bufferData, const float* delayBufferData);

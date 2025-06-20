@@ -33,8 +33,8 @@ public:
 private:
     MiauDelay& audioProcessor;
 
-    juce::Slider delayTimeSlider, dryWetSlider, inputGainSlider, outputGainSlider; // feedbackSlider, hpfSlider, lpfSlider, lfoSlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>  delayTimeAttach, dryWetAttach, inputGainAttach, outputGainAttach; //gainAttach, rateAttach, panAttach;
+    juce::Slider delayTimeSlider, dryWetSlider, inputGainSlider, outputGainSlider, hpfSlider, lpfSlider; // feedbackSlider, hpfSlider, lpfSlider, lfoSlider;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>  delayTimeAttach, dryWetAttach, inputGainAttach, outputGainAttach, hpfAttach, lpfAttach; //gainAttach, rateAttach, panAttach;
 
     juce::Image backgroundImage;
     juce::ImageComponent backgroundComponent;

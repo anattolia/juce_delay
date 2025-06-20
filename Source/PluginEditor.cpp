@@ -34,6 +34,14 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor (MiauDelay& p)
     prepareSlider(outputGainSlider);
     outputGainAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "OutputGain", outputGainSlider);
 
+    // hpf slider
+    prepareSlider(hpfSlider);
+    hpfAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "HPFFreq", hpfSlider);
+
+    // lpf slider
+    prepareSlider(lpfSlider);
+    lpfAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LPFFreq", lpfSlider);
+
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -53,12 +61,18 @@ MiauDelayAudioProcessorEditor::~MiauDelayAudioProcessorEditor()
 
   outputGainSlider.setLookAndFeel(nullptr);
   outputGainSlider.removeListener(this);
+
+  hpfSlider.setLookAndFeel(nullptr);
+  hpfSlider.removeListener(this);
+
+  lpfSlider.setLookAndFeel(nullptr);
+  lpfSlider.removeListener(this);
 }
 
 void MiauDelayAudioProcessorEditor::prepareSlider(juce::Slider& slider)
 {
     slider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
-    slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 55, 20);
     addAndMakeVisible(slider);
 
    slider.setLookAndFeel(&sliderLookAndFeel);
@@ -78,6 +92,8 @@ void MiauDelayAudioProcessorEditor::resized()
 	dryWetSlider.setBounds(418, 346, 173, 42);
     inputGainSlider.setBounds(418, 55, 173, 42);
     outputGainSlider.setBounds(418, 428, 173, 42);
+    hpfSlider.setBounds(418, 158, 173, 42);
+    lpfSlider.setBounds(418, 231, 173, 42);
 }
 
 void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)

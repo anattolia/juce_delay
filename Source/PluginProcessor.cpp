@@ -38,6 +38,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout MiauDelay::createParameters(
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "DryWet", 1 }, "DryWet", 0.0f, 1.0f, 0.5f));
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "InputGain", 1 }, "InputGain", 0.0f, 2.0f, 1.0f));
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "OutputGain", 1 }, "OutputGain", 0.0f, 2.0f, 1.0f));
+    parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "HPFFreq", 1 }, "HPFFreq", 0, 500, 0));
+    parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "LPFFreq", 1 }, "LPFFreq", 2000, 20000, 20000));
 
     return parameters;
 }
@@ -107,7 +109,16 @@ void MiauDelay::changeProgramName (int index, const juce::String& newName)
 //==============================================================================
 void MiauDelay::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    juce::dsp::ProcessSpec spec;
+
+    // ¿Esto hace falta?
+    spec.sampleRate = sampleRate;
+    spec.numChannels = getTotalNumOutputChannels();
+    spec.maximumBlockSize = samplesPerBlock;
+
 	delay.prepare(sampleRate, samplesPerBlock);
+    hpf.prepare(spec);
+    lpf.prepare(spec);
 }
 
 void MiauDelay::releaseResources()
@@ -148,11 +159,15 @@ void MiauDelay::updateParameters()
     float inDryWetValue = *apvts.getRawParameterValue("DryWet");
     float inInputGainValue = *apvts.getRawParameterValue("InputGain");
     float inOutputGainValue = *apvts.getRawParameterValue("OutputGain");
+    float inHPFFreqValue = *apvts.getRawParameterValue("HPFFreq");
+    float inLPFFreqValue = *apvts.getRawParameterValue("LPFFreq");
     
    delay.setDelayTimeValue(inDelayTimeValue);
    dryWet.setDryWetValue(inDryWetValue);
    inputGain.setGainValue(inInputGainValue);
    outputGain.setGainValue(inOutputGainValue);
+   hpf.setHPFFreqValue(inHPFFreqValue);
+   lpf.setLPFFreqValue(inLPFFreqValue);
 }
 
 void MiauDelay::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -168,10 +183,14 @@ void MiauDelay::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
 
-    delay.process(buffer, *apvts.getRawParameterValue("DelayTime"), totalNumInputChannels);
+    delay.process(buffer, totalNumInputChannels);
     dryWet.process(dryBuffer, buffer);
     inputGain.process(buffer);
     outputGain.process(buffer);
+
+    // TODO: unificar en una sola función?
+    hpf.processHPF(buffer);
+    lpf.processLPF(buffer);
 }
 
 //==============================================================================
