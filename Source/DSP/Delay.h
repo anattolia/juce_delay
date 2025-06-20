@@ -18,6 +18,7 @@ public:
 	~Delay();
 
 	void setDelayTimeValue(float newDelayTimeValue);
+	void setFeedbackValue(float newFeedbackValue);
 
 	void prepare(double sampleRate, int samplesPerBlock);
 
@@ -33,5 +34,6 @@ private:
 	int mSampleRate{ 44100 };
 
 	int delayTimeMsValue;
+	float mFeedback{ 0.3f };
 
 };
