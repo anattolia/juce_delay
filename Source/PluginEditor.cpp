@@ -22,6 +22,10 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor (MiauDelay& p)
     prepareSlider(delayTimeSlider);
     delayTimeAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DelayTime", delayTimeSlider);
 
+    // Feedback slider
+    prepareSlider(feedbackSlider);
+    feedbackAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Feedback", feedbackSlider);
+
     // DryWet slider
     prepareSlider(dryWetSlider);
     dryWetAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DryWet", dryWetSlider);
@@ -52,6 +56,9 @@ MiauDelayAudioProcessorEditor::~MiauDelayAudioProcessorEditor()
 {
   delayTimeSlider.setLookAndFeel(nullptr);
   delayTimeSlider.removeListener(this);
+
+  feedbackSlider.setLookAndFeel(nullptr);
+  feedbackSlider.removeListener(this);
 
   dryWetSlider.setLookAndFeel(nullptr);
   dryWetSlider.removeListener(this);
@@ -89,6 +96,7 @@ void MiauDelayAudioProcessorEditor::resized()
     backgroundComponent.setBounds(getLocalBounds());
 
     delayTimeSlider.setBounds(78, 167, 173, 42);
+    feedbackSlider.setBounds(78, 341, 173, 42);
 	dryWetSlider.setBounds(418, 346, 173, 42);
     inputGainSlider.setBounds(418, 55, 173, 42);
     outputGainSlider.setBounds(418, 428, 173, 42);
@@ -100,6 +108,6 @@ void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)
 {
     if (s == &inputGainSlider)
     {
-       DBG ("input Slider changed: " << dryWetSlider.getValue());
+       DBG ("feedbackSlider changed: " << feedbackSlider.getValue());
     }
 }

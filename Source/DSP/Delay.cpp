@@ -18,17 +18,34 @@ void Delay::setDelayTimeValue(float newDelayTimeValue) {
 
 }
 
+void Delay::setFeedbackValue(float newFeedbackValue){
+    mFeedback = newFeedbackValue;
+}
+
 void Delay::fillDelayBuffer(int channel, const int bufferLength, const int delayBufferLength, const float* bufferData, const float* delayBufferData)
 {
-    // Copiar los datos del buffer al delay buffer
+    // Calculate read position for feedback
+    const int feedbackReadPosition = static_cast<int> (delayBufferLength + mWritePosition - (mSampleRate * delayTimeMsValue / 1000)) % delayBufferLength;
+
     if (delayBufferLength > bufferLength + mWritePosition) {
-        mDelayBuffer.copyFromWithRamp(channel, mWritePosition, bufferData, bufferLength, 0.8, 0.8);
+        for (int i = 0; i < bufferLength; ++i) {
+            float delayedSample = delayBufferData[(feedbackReadPosition + i) % delayBufferLength];
+            float inputSample = bufferData[i] + mFeedback * delayedSample;
+            mDelayBuffer.setSample(channel, mWritePosition + i, inputSample * 0.8f); // 0.8f: ramp/gain
+        }
     }
     else {
         const int bufferRemaining = delayBufferLength - mWritePosition;
-
-        mDelayBuffer.copyFromWithRamp(channel, mWritePosition, bufferData, bufferRemaining, 0.8, 0.8);
-        mDelayBuffer.copyFromWithRamp(channel, 0, bufferData, bufferLength - bufferRemaining, 0.8, 0.8);
+        for (int i = 0; i < bufferRemaining; ++i) {
+            float delayedSample = delayBufferData[(feedbackReadPosition + i) % delayBufferLength];
+            float inputSample = bufferData[i] + mFeedback * delayedSample;
+            mDelayBuffer.setSample(channel, mWritePosition + i, inputSample * 0.8f);
+        }
+        for (int i = 0; i < bufferLength - bufferRemaining; ++i) {
+            float delayedSample = delayBufferData[(i) % delayBufferLength];
+            float inputSample = bufferData[bufferRemaining + i] + mFeedback * delayedSample;
+            mDelayBuffer.setSample(channel, i, inputSample * 0.8f);
+        }
     }
 }
 
@@ -48,10 +65,12 @@ void Delay::getFromDelayBuffer(juce::AudioBuffer<float>& buffer, int channel, co
 
 void Delay::prepare(double sampleRate, int samplesPerBlock)
 {
-	const int numInputChannels = 2; // Assuming stereo buffer
-	const int delayBufferSize = 5 * (sampleRate + samplesPerBlock); // the number of seconds available for the delay
-	mSampleRate = sampleRate;
-	mDelayBuffer.setSize(numInputChannels, delayBufferSize);
+    const int numInputChannels = 2; // Assuming stereo buffer
+    const int delayBufferSize = 5 * (sampleRate + samplesPerBlock); // the number of seconds available for the delay
+    mSampleRate = sampleRate;
+    mDelayBuffer.setSize(numInputChannels, delayBufferSize);
+    mDelayBuffer.clear(); // <-- Clear buffer to avoid garbage values
+    mWritePosition = 0;   // <-- Reset write position
 }
 
 void Delay::process(juce::AudioBuffer<float>& buffer, int numInputChannels) {
@@ -68,5 +87,5 @@ void Delay::process(juce::AudioBuffer<float>& buffer, int numInputChannels) {
     }
 
     mWritePosition += bufferLength;
-    mWritePosition %= delayBufferLength; // Asegurarse de que no se salga del límite
+    mWritePosition %= delayBufferLength; // Asegurarse de que no se salga del lï¿½mite
 }
