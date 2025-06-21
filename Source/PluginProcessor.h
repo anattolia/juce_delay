@@ -13,6 +13,7 @@
 #include "DSP/DryWet.h"
 #include "DSP/Gain.h"
 #include "DSP/Filter.h"
+#include "DSP/SyncTimeHandler.h"
 
 //==============================================================================
 /**
@@ -71,6 +72,7 @@ private:
     Gain outputGain;
     Filter hpf;
     Filter lpf;
+	SyncTimeHandler syncTimeHandler;
     
     juce::AudioBuffer<float> dryBuffer;
 

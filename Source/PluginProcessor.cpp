@@ -41,6 +41,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout MiauDelay::createParameters(
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "OutputGain", 1 }, "OutputGain", 0.0f, 2.0f, 1.0f));
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "HPFFreq", 1 }, "HPFFreq", 0, 500, 0));
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "LPFFreq", 1 }, "LPFFreq", 2000, 20000, 20000));
+    parameters.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "SyncMode", 1 }, "SyncMode", false));
+    parameters.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "SyncTime", 1 }, "SyncTime", juce::StringArray{ "1", "1/2", "1/4", "1/8"}, 0));
+
 
     return parameters;
 }
@@ -163,7 +166,25 @@ void MiauDelay::updateParameters()
     float inOutputGainValue = *apvts.getRawParameterValue("OutputGain");
     float inHPFFreqValue = *apvts.getRawParameterValue("HPFFreq");
     float inLPFFreqValue = *apvts.getRawParameterValue("LPFFreq");
-    
+    bool inSyncMode = *apvts.getRawParameterValue("SyncMode");
+    int inSyncTimeValue = *apvts.getRawParameterValue("SyncTime");
+      
+
+    if (inSyncMode)
+    {
+        if (getPlayHead() != nullptr)  
+        {
+            auto bpmValue = getPlayHead()->getPosition()->getBpm();
+
+            if (bpmValue.hasValue())
+            {
+                // Convert sync time value to milliseconds
+                syncTimeHandler.setSyncMode(inSyncTimeValue);
+                inDelayTimeValue = syncTimeHandler.getSyncTimeInterval(inSyncMode, bpmValue);
+            }
+        }
+    }
+	
    delay.setDelayTimeValue(inDelayTimeValue);
    delay.setFeedbackValue(inFeedbackValue);
    dryWet.setDryWetValue(inDryWetValue);
@@ -187,13 +208,14 @@ void MiauDelay::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
         buffer.clear(i, 0, buffer.getNumSamples());
 
     delay.process(buffer, totalNumInputChannels);
-    dryWet.process(dryBuffer, buffer);
     inputGain.process(buffer);
-    outputGain.process(buffer);
-
+  
     // TODO: unificar en una sola funci�n?
     hpf.processHPF(buffer);
     lpf.processLPF(buffer);
+
+    dryWet.process(dryBuffer, buffer);
+    outputGain.process(buffer);
 }
 
 //==============================================================================

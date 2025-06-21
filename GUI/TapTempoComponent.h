@@ -11,11 +11,11 @@ public:
 
     void resized() override;
 
-    /** Set a callback that is invoked each time a new tap interval is computed.
-        The callback receives the computed delay time in milliseconds. */
+    /** Configurar un callback que se llama cada vez que un nuevo intervalo de tap es computado.
+        El callback recibe el tiempo de delay computado en milisegundos. */
     void setTapCallback(std::function<void(double)> callback);
 
-    /** Optionally, reset the tap history (useful if too much time elapses between taps). */
+    /** Opcional, borrar el historial del tap (útil si pasa mucho tiempo entre taps). */
     void reset();
 
 private:

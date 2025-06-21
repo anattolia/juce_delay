@@ -20,6 +20,7 @@ void Delay::setDelayTimeValue(float newDelayTimeValue) {
 
 void Delay::setFeedbackValue(float newFeedbackValue){
     mFeedback = newFeedbackValue;
+
 }
 
 void Delay::fillDelayBuffer(int channel, const int bufferLength, const int delayBufferLength, const float* bufferData, const float* delayBufferData)
@@ -30,7 +31,7 @@ void Delay::fillDelayBuffer(int channel, const int bufferLength, const int delay
     if (delayBufferLength > bufferLength + mWritePosition) {
         for (int i = 0; i < bufferLength; ++i) {
             float delayedSample = delayBufferData[(feedbackReadPosition + i) % delayBufferLength];
-            float inputSample = bufferData[i] + mFeedback * delayedSample;
+            float inputSample = bufferData[i] + (mFeedback * delayedSample); // Camino de feedback -> filtrar 
             mDelayBuffer.setSample(channel, mWritePosition + i, inputSample * 0.8f); // 0.8f: ramp/gain
         }
     }

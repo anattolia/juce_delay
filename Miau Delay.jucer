@@ -10,6 +10,8 @@
             file="GUI/TapTempoComponent.h"/>
     </GROUP>
     <GROUP id="{FEFB58B6-1511-DA00-1E11-501D507401DD}" name="LookAndFeel">
+      <FILE id="j4HbF8" name="ButtonLookAndFeel.h" compile="0" resource="0"
+            file="LookAndFeel/ButtonLookAndFeel.h"/>
       <FILE id="Z3o0vw" name="SliderLookAndFeel.h" compile="0" resource="0"
             file="LookAndFeel/SliderLookAndFeel.h"/>
     </GROUP>
@@ -25,6 +27,8 @@
       <FILE id="EmNjaL" name="Filter.h" compile="0" resource="0" file="Source/DSP/Filter.h"/>
       <FILE id="vrPJw9" name="Gain.cpp" compile="1" resource="0" file="Source/DSP/Gain.cpp"/>
       <FILE id="yyQbif" name="Gain.h" compile="0" resource="0" file="Source/DSP/Gain.h"/>
+      <FILE id="CuWEwW" name="SyncTimeHandler.h" compile="0" resource="0"
+            file="Source/DSP/SyncTimeHandler.h"/>
     </GROUP>
     <GROUP id="{62D429DE-9689-3AA8-DB89-EDE6F6FEF9D1}" name="Source">
       <FILE id="rZyZYf" name="PluginProcessor.cpp" compile="1" resource="0"
