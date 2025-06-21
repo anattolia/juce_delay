@@ -34,6 +34,6 @@ private:
 	int mSampleRate{ 44100 };
 
 	int delayTimeMsValue;
-	float mFeedback{ 0.3f };
+	float mFeedback{ 0.7f };
 
 };

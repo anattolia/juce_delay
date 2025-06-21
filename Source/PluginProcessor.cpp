@@ -36,7 +36,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MiauDelay::createParameters(
     // Par�metros del tiempo del delay
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "DelayTime", 1 }, "DelayTime", 0, 5000, 250));
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "DryWet", 1 }, "DryWet", 0.0f, 1.0f, 0.5f));
-    parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "Feedback", 1 }, "Feedback", 0.0f, 0.95f, 0.3f));
+    parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "Feedback", 1 }, "Feedback", 0.0f, 0.99f, 0.5f));
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "InputGain", 1 }, "InputGain", 0.0f, 2.0f, 1.0f));
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "OutputGain", 1 }, "OutputGain", 0.0f, 2.0f, 1.0f));
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "HPFFreq", 1 }, "HPFFreq", 0, 500, 0));
@@ -157,12 +157,12 @@ bool MiauDelay::isBusesLayoutSupported (const BusesLayout& layouts) const
 void MiauDelay::updateParameters()
 {
     float inDelayTimeValue = *apvts.getRawParameterValue("DelayTime");
+    float inFeedbackValue = *apvts.getRawParameterValue("Feedback");
     float inDryWetValue = *apvts.getRawParameterValue("DryWet");
     float inInputGainValue = *apvts.getRawParameterValue("InputGain");
     float inOutputGainValue = *apvts.getRawParameterValue("OutputGain");
     float inHPFFreqValue = *apvts.getRawParameterValue("HPFFreq");
     float inLPFFreqValue = *apvts.getRawParameterValue("LPFFreq");
-    float inFeedbackValue = *apvts.getRawParameterValue("Feedback");
     
    delay.setDelayTimeValue(inDelayTimeValue);
    delay.setFeedbackValue(inFeedbackValue);
