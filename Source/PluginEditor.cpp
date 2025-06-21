@@ -46,6 +46,16 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor (MiauDelay& p)
     prepareSlider(lpfSlider);
     lpfAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LPFFreq", lpfSlider);
 
+    // Configurar el componente de tap tempo
+    // Callback para actualizar el parámetro DelayTime mapeando newDelayTime de ms a un valor normalizado
+    tapTempoComp.setTapCallback([this](double newDelayTime)
+        {
+            float normalizedValue = static_cast<float>(newDelayTime / 5000.00f);
+            audioProcessor.apvts.getParameter("DelayTime")->setValueNotifyingHost(normalizedValue);
+           // DBG("Nuevo delay time desde TapTempo: " << newDelayTime << "ms");
+        }
+    );
+    addAndMakeVisible(tapTempoComp);
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -56,6 +66,9 @@ MiauDelayAudioProcessorEditor::~MiauDelayAudioProcessorEditor()
 {
   delayTimeSlider.setLookAndFeel(nullptr);
   delayTimeSlider.removeListener(this);
+
+ // tapTempoComp.setLookAndFeel(nullptr);
+ // tapTempoComp.removeComponentListener(this);
 
   feedbackSlider.setLookAndFeel(nullptr);
   feedbackSlider.removeListener(this);
@@ -96,6 +109,7 @@ void MiauDelayAudioProcessorEditor::resized()
     backgroundComponent.setBounds(getLocalBounds());
 
     delayTimeSlider.setBounds(78, 167, 173, 42);
+    tapTempoComp.setBounds(32, 230, 50, 65);
     feedbackSlider.setBounds(78, 341, 173, 42);
 	dryWetSlider.setBounds(418, 346, 173, 42);
     inputGainSlider.setBounds(418, 55, 173, 42);

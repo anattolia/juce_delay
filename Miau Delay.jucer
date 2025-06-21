@@ -3,6 +3,12 @@
 <JUCERPROJECT id="iR16WE" name="Miau Delay" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" companyName="coclealala">
   <MAINGROUP id="F2Abqu" name="Miau Delay">
+    <GROUP id="{4C5941DD-132D-7BFB-B910-6C175A419098}" name="GUI">
+      <FILE id="pEch39" name="TapTempoComponent.cpp" compile="1" resource="0"
+            file="GUI/TapTempoComponent.cpp"/>
+      <FILE id="vxJaJ1" name="TapTempoComponent.h" compile="0" resource="0"
+            file="GUI/TapTempoComponent.h"/>
+    </GROUP>
     <GROUP id="{FEFB58B6-1511-DA00-1E11-501D507401DD}" name="LookAndFeel">
       <FILE id="Z3o0vw" name="SliderLookAndFeel.h" compile="0" resource="0"
             file="LookAndFeel/SliderLookAndFeel.h"/>

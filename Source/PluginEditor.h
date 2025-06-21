@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "../LookAndFeel/SliderLookAndFeel.h"
+#include "../GUI/TapTempoComponent.h"
 
 //==============================================================================
 /**
@@ -40,6 +41,8 @@ private:
     juce::ImageComponent backgroundComponent;
 
     SliderLookAndFeel sliderLookAndFeel;
+
+    TapTempoComponent tapTempoComp;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MiauDelayAudioProcessorEditor)
 };
