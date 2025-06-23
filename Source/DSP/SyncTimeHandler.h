@@ -17,6 +17,7 @@ public:
     {
         float syncTimeInterval;
 
+        // TODO: Convertir a enum
         switch
 			(choice)
 		{

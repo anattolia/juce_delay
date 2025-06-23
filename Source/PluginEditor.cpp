@@ -47,15 +47,37 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor (MiauDelay& p)
     lpfAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LPFFreq", lpfSlider);
 
     // Configurar el componente de tap tempo
-    // Callback para actualizar el parámetro DelayTime mapeando newDelayTime de ms a un valor normalizado
+ // Callback para actualizar el parámetro DelayTime mapeando newDelayTime de ms a un valor normalizado
     tapTempoComp.setTapCallback([this](double newDelayTime)
         {
             float normalizedValue = static_cast<float>(newDelayTime / 5000.00f);
             audioProcessor.apvts.getParameter("DelayTime")->setValueNotifyingHost(normalizedValue);
-           // DBG("Nuevo delay time desde TapTempo: " << newDelayTime << "ms");
+            // DBG("Nuevo delay time desde TapTempo: " << newDelayTime << "ms");
         }
     );
     addAndMakeVisible(tapTempoComp);
+
+    // lfo slider
+    prepareSlider(lfoSlider);
+    lfoAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LFO", lfoSlider);
+
+    // lfo bypass
+    lfoActive.setButtonText("<");
+    lfoActive.setClickingTogglesState(true);
+
+
+    addAndMakeVisible(lfoActive);
+    lfoActive.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::lightgreen);
+    lfoActive.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::darkgreen);
+    
+
+    lfoActiveAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "ActiveLFO", lfoActive);
+    lfoActive.onClick = []
+        {
+          //  DBG("Click");
+        };
+
+
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -87,6 +109,9 @@ MiauDelayAudioProcessorEditor::~MiauDelayAudioProcessorEditor()
 
   lpfSlider.setLookAndFeel(nullptr);
   lpfSlider.removeListener(this);
+
+  lfoSlider.setLookAndFeel(nullptr);
+  lfoSlider.removeListener(this);
 }
 
 void MiauDelayAudioProcessorEditor::prepareSlider(juce::Slider& slider)
@@ -116,6 +141,10 @@ void MiauDelayAudioProcessorEditor::resized()
     outputGainSlider.setBounds(418, 428, 173, 42);
     hpfSlider.setBounds(418, 158, 173, 42);
     lpfSlider.setBounds(418, 231, 173, 42);
+    lfoSlider.setBounds(78, 430, 173, 42);
+
+    lfoActive.setBounds(189, 405, 18, 18);
+
 }
 
 void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)

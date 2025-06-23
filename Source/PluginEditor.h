@@ -34,8 +34,14 @@ public:
 private:
     MiauDelay& audioProcessor;
 
-    juce::Slider delayTimeSlider, feedbackSlider, dryWetSlider, inputGainSlider, outputGainSlider, hpfSlider, lpfSlider; // lfoSlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>  delayTimeAttach, feedbackAttach, dryWetAttach, inputGainAttach, outputGainAttach, hpfAttach, lpfAttach; //lfoAttach;
+    juce::Slider delayTimeSlider, feedbackSlider, dryWetSlider, inputGainSlider, outputGainSlider, hpfSlider, lpfSlider, lfoSlider;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>  delayTimeAttach, feedbackAttach, dryWetAttach, inputGainAttach, outputGainAttach, hpfAttach, lpfAttach, lfoAttach;
+
+    juce::TextButton lfoActive;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lfoActiveAttach;
+
+    juce::ComboBox lfoChoiceCombo;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> lfoChoiceAttach;
 
     juce::Image backgroundImage;
     juce::ImageComponent backgroundComponent;

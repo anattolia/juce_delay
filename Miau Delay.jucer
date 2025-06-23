@@ -16,7 +16,7 @@
             file="LookAndFeel/SliderLookAndFeel.h"/>
     </GROUP>
     <GROUP id="{EC29E0F4-7DFE-3DFF-CEF9-0E57BB25BA0F}" name="Assets">
-      <FILE id="z0nJJj" name="miau.png" compile="0" resource="1" file="Assets/miau.png"/>
+      <FILE id="IXkc6C" name="miau.png" compile="0" resource="1" file="Assets/miau.png"/>
     </GROUP>
     <GROUP id="{AC62B72A-AFCB-8D19-B28D-4B0F8F8859AA}" name="DSP">
       <FILE id="yzJBRk" name="Delay.cpp" compile="1" resource="0" file="Source/DSP/Delay.cpp"/>
@@ -27,6 +27,8 @@
       <FILE id="EmNjaL" name="Filter.h" compile="0" resource="0" file="Source/DSP/Filter.h"/>
       <FILE id="vrPJw9" name="Gain.cpp" compile="1" resource="0" file="Source/DSP/Gain.cpp"/>
       <FILE id="yyQbif" name="Gain.h" compile="0" resource="0" file="Source/DSP/Gain.h"/>
+      <FILE id="gxngV0" name="LFO.cpp" compile="1" resource="0" file="Source/DSP/LFO.cpp"/>
+      <FILE id="IZLT2e" name="LFO.h" compile="0" resource="0" file="Source/DSP/LFO.h"/>
       <FILE id="CuWEwW" name="SyncTimeHandler.h" compile="0" resource="0"
             file="Source/DSP/SyncTimeHandler.h"/>
     </GROUP>

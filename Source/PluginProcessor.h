@@ -14,6 +14,7 @@
 #include "DSP/Gain.h"
 #include "DSP/Filter.h"
 #include "DSP/SyncTimeHandler.h"
+#include "DSP/LFO.h"
 
 //==============================================================================
 /**
@@ -73,8 +74,11 @@ private:
     Filter hpf;
     Filter lpf;
 	SyncTimeHandler syncTimeHandler;
+    LFO lfo;
     
     juce::AudioBuffer<float> dryBuffer;
+
+    bool lfoActive{ false };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MiauDelay)

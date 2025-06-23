@@ -31,7 +31,7 @@ MiauDelay::~MiauDelay()
 juce::AudioProcessorValueTreeState::ParameterLayout MiauDelay::createParameters()
 {
     juce::AudioProcessorValueTreeState::ParameterLayout parameters;
-    
+    auto waves = juce::StringArray("Sine", "Square", "Saw", "Triangle");
 
     // Par�metros del tiempo del delay
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "DelayTime", 1 }, "DelayTime", 0, 5000, 250));
@@ -43,7 +43,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout MiauDelay::createParameters(
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "LPFFreq", 1 }, "LPFFreq", 2000, 20000, 20000));
     parameters.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "SyncMode", 1 }, "SyncMode", false));
     parameters.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "SyncTime", 1 }, "SyncTime", juce::StringArray{ "1", "1/2", "1/4", "1/8"}, 0));
-
+    parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "LFO", 1 }, "LFO", 0.01f, 20.0f, 10.0f));
+    parameters.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "LFOChoice", 1 }, "LFOChoice", waves, 0));
+    parameters.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "ActiveLFO", 1 }, "ActiveLFO", false));
 
     return parameters;
 }
@@ -123,6 +125,7 @@ void MiauDelay::prepareToPlay (double sampleRate, int samplesPerBlock)
 	delay.prepare(sampleRate, samplesPerBlock);
     hpf.prepare(spec);
     lpf.prepare(spec);
+    lfo.prepare(sampleRate);
 }
 
 void MiauDelay::releaseResources()
@@ -166,9 +169,12 @@ void MiauDelay::updateParameters()
     float inOutputGainValue = *apvts.getRawParameterValue("OutputGain");
     float inHPFFreqValue = *apvts.getRawParameterValue("HPFFreq");
     float inLPFFreqValue = *apvts.getRawParameterValue("LPFFreq");
+    float inLFOFreqValue = *apvts.getRawParameterValue("LFO");
+    bool inLFOActive = *apvts.getRawParameterValue("ActiveLFO");
+   // auto inLFOChoiceValue = *apvts.getRawParameterValue("LFOChoice");
     bool inSyncMode = *apvts.getRawParameterValue("SyncMode");
     int inSyncTimeValue = *apvts.getRawParameterValue("SyncTime");
-      
+    
 
     if (inSyncMode)
     {
@@ -179,7 +185,7 @@ void MiauDelay::updateParameters()
             if (bpmValue.hasValue())
             {
                 // Convert sync time value to milliseconds
-                syncTimeHandler.setSyncMode(inSyncTimeValue);
+              //  syncTimeHandler.setSyncMode(inSyncTimeValue);
                 inDelayTimeValue = syncTimeHandler.getSyncTimeInterval(inSyncMode, bpmValue);
             }
         }
@@ -192,6 +198,9 @@ void MiauDelay::updateParameters()
    outputGain.setGainValue(inOutputGainValue);
    hpf.setHPFFreqValue(inHPFFreqValue);
    lpf.setLPFFreqValue(inLPFFreqValue);
+   lfo.setFrequencyValue(inLFOFreqValue);
+   lfoActive = inLFOActive;
+   lfo.setChoiceValue(*apvts.getRawParameterValue("LFOChoice")); // TODO ¿Por qué no se puede hacer como los demás?
 }
 
 void MiauDelay::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -213,6 +222,11 @@ void MiauDelay::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
     // TODO: unificar en una sola funci�n?
     hpf.processHPF(buffer);
     lpf.processLPF(buffer);
+
+    if (lfoActive)
+    {
+        lfo.process(buffer);
+    }
 
     dryWet.process(dryBuffer, buffer);
     outputGain.process(buffer);
