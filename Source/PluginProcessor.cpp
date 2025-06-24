@@ -171,10 +171,8 @@ void MiauDelay::updateParameters()
     float inLPFFreqValue = *apvts.getRawParameterValue("LPFFreq");
     float inLFOFreqValue = *apvts.getRawParameterValue("LFO");
     bool inLFOActive = *apvts.getRawParameterValue("ActiveLFO");
-   // auto inLFOChoiceValue = *apvts.getRawParameterValue("LFOChoice");
     bool inSyncMode = *apvts.getRawParameterValue("SyncMode");
     int inSyncTimeValue = *apvts.getRawParameterValue("SyncTime");
-    
 
     if (inSyncMode)
     {

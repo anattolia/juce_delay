@@ -21,7 +21,10 @@ public:
 private:
     void tapButtonClicked();
 
-    juce::TextButton tapButton{ "Tap" };
+    juce::Image buttonImage{ juce::ImageCache::getFromMemory(BinaryData::huella_png, BinaryData::huella_pngSize) };
+
+    juce::ImageButton tapButton;
+   
     double lastTapTime = 0.0;
     std::function<void(double)> tapCallback;
 };

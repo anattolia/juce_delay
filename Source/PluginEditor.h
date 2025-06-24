@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "../LookAndFeel/SliderLookAndFeel.h"
+#include "../LookAndFeel/ButtonLookAndFeel.h"
 #include "../GUI/TapTempoComponent.h"
 
 //==============================================================================
@@ -31,6 +32,8 @@ public:
 	// Función para preparar los sliders
     void prepareSlider(juce::Slider& slider);
 
+  //  void prepareButton(juce::Button& button);
+
 private:
     MiauDelay& audioProcessor;
 
@@ -47,6 +50,7 @@ private:
     juce::ImageComponent backgroundComponent;
 
     SliderLookAndFeel sliderLookAndFeel;
+    //ButtonLookAndFeel buttonLookAndFeel;
 
     TapTempoComponent tapTempoComp;
 
