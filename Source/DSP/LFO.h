@@ -20,9 +20,9 @@ public:
     enum Wave
     {
         Sine = 0,
-        Square = 1,
+        Triangle  = 1,
         Saw = 2,
-        Triangle = 3,
+        Square = 3,
     };
 
     void prepare(double theSampleRate);
@@ -32,9 +32,9 @@ public:
     void setChoiceValue(int newChoiceValue);
 
     float sineWave(int channel);
-    float squareWave(int channel);
     float triangleWave(int channel);
     float sawtoothWave(int channel);
+    float squareWave(int channel);
 
 private:
     float sampleRate{ 44100.0f };

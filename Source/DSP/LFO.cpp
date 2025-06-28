@@ -39,15 +39,15 @@ void LFO::process(juce::AudioBuffer<float>& buffer)
                 waveValue = sineWave(channel);
                 break;
 
-            case Wave::Square:
-				waveValue = squareWave(channel);
+            case Wave::Triangle:
+				waveValue = triangleWave(channel);
 				break;
 
             case Wave::Saw:
 				waveValue = sawtoothWave(channel);
 
-            case Wave::Triangle:
-				waveValue = triangleWave(channel);
+            case Wave::Square:
+				waveValue = squareWave(channel);
                 break;
             }
 

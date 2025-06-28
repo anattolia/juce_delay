@@ -9,6 +9,7 @@
 */
 
 #include "Filter.h"
+#include "LFO.h"
 
 Filter::Filter() {};
 Filter::~Filter() {};
