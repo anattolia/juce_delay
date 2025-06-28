@@ -18,10 +18,10 @@ public:
         triplets = inTriplets;
     }
 
-    int SyncTimeHandler::getSyncActive() 
-    { 
-        return syncActive; 
-    };
+    int getSyncActive()
+    {
+        return syncActive;
+    }
 
     float getSyncTimeInterval(int choice, juce::Optional<double>& bpmValue)
     {
@@ -29,24 +29,24 @@ public:
 
         // TODO: Convertir a enum
         switch
-			(choice)
-		{
-		case 0: /** 1 */
-			timeInterval = 0.0f;
-			break;
-		case 1: /** 1/2 */
-			timeInterval = 0.25f;
-			break;
-		case 2: /** 1/4 */
-			timeInterval = 0.5f;
-			break;
-		case 3: /** 1/8 */
-			timeInterval = 0.75f;
-			break;
-		default: 
-			timeInterval = 1.0f;
-			break;
-		}
+            (choice)
+        {
+        case 0: /** 1 */
+            timeInterval = 0.0f;
+            break;
+        case 1: /** 1/2 */
+            timeInterval = 0.25f;
+            break;
+        case 2: /** 1/4 */
+            timeInterval = 0.5f;
+            break;
+        case 3: /** 1/8 */
+            timeInterval = 0.75f;
+            break;
+        default:
+            timeInterval = 1.0f;
+            break;
+        }
 
         /** Convert BPM to time in milliseconds */
         if (*bpmValue != currentBpm)
@@ -72,12 +72,12 @@ public:
 
         /** Triplets */
         if (triplets)
-        { 
+        {
             syncTimeInterval *= (2.0f / 3.0f);
             DBG("triplets" << syncTimeInterval);
         }
         /** Dotted */
-        
+
        // else if (syncMode == 2)
          //  syncTimeInterval *= (1.5f);
 
@@ -85,12 +85,12 @@ public:
     }
 
 private:
-    double currentBpm { 120.0 };
-    double beatInMilliseconds { 500.0 };
-	float timeInterval { 0.0f }; // Default to 1 (1 beat)
+    double currentBpm{ 120.0 };
+    double beatInMilliseconds{ 500.0 };
+    float timeInterval{ 0.0f }; // Default to 1 (1 beat)
 
-    bool triplets { false };
-    bool syncActive { false };
+    bool triplets{ false };
+    bool syncActive{ false };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SyncTimeHandler)
 };
