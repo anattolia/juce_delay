@@ -74,6 +74,7 @@ public:
         if (triplets)
         { 
             syncTimeInterval *= (2.0f / 3.0f);
+            DBG("triplets" << syncTimeInterval);
         }
         /** Dotted */
         

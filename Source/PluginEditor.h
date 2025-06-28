@@ -47,7 +47,7 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> syncChoiceAttach;
 
     juce::ImageButton syncTripletsActive;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> syncTripletsAttach;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> syncTripletsAttach;
 
     juce::TextButton lfoActive;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lfoActiveAttach;

@@ -178,7 +178,7 @@ void MiauDelay::updateParameters()
    
     const float pi = juce::MathConstants<float>::pi;
 
-    if (inSyncActive)
+    if (inSyncActive)	
     {
         if (getPlayHead() != nullptr)  
         {
@@ -194,7 +194,6 @@ void MiauDelay::updateParameters()
     } 
     else
     {
-
     }
 	
    delay.setDelayTimeValue(inDelayTimeValue);

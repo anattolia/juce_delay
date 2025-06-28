@@ -82,13 +82,12 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor (MiauDelay& p)
     syncTripletsActive.setClickingTogglesState(true);
     syncTripletsActive.setImages(false, true, true, tresilloImage, 1.0, juce::Colours::grey, tresilloImage, 0.3, juce::Colours::grey, tresilloImage, 0.3, juce::Colours::greenyellow);
 
-  //  syncTripletsAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "SyncTripletsActive", syncTripletsActive);
+    syncTripletsAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "SyncTripletsActive", syncTripletsActive);
     addAndMakeVisible(syncTripletsActive);
 
     // lfo slider
     prepareSlider(lfoSlider);
     lfoAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LFO", lfoSlider);
-
     lfoActive.setClickingTogglesState(true);
 
     addAndMakeVisible(lfoActive);
@@ -180,7 +179,6 @@ void MiauDelayAudioProcessorEditor::resized()
 
     lfoSlider.setBounds(78, 430, 173, 42);
     lfoActive.setBounds(201, 410, 16, 17);
-//    lfoChoiceCombo.setBounds(0, 0, 100, 24);
 }
 
 void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)
