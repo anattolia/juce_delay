@@ -41,9 +41,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout MiauDelay::createParameters(
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "OutputGain", 1 }, "OutputGain", 0.0f, 2.0f, 1.0f));
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "HPFFreq", 1 }, "HPFFreq", 0, 500, 0));
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "LPFFreq", 1 }, "LPFFreq", 2000, 20000, 20000));
-    parameters.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "SyncMode", 1 }, "SyncMode", false));
-    parameters.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "SyncTime", 1 }, "SyncTime", juce::StringArray{ "1", "1/2", "1/4", "1/8"}, 0));
-    parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "LFO", 1 }, "LFO", 0.01f, 20.0f, 10.0f));
+    parameters.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "SyncActive", 1 }, "SyncActive", false));
+    parameters.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "SyncTime", 1 }, "SyncTime", juce::StringArray{ "1", "1/2", "1/4", "1/8" }, 0));
+    parameters.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "SyncTripletsActive", 1 }, "SyncTripletsActive", false));
+    parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "LFO", 1 }, "LFO", 0.01f, 500.0f, 200.0f));
     parameters.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "LFOChoice", 1 }, "LFOChoice", waves, 0));
     parameters.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "ActiveLFO", 1 }, "ActiveLFO", false));
 
@@ -171,22 +172,29 @@ void MiauDelay::updateParameters()
     float inLPFFreqValue = *apvts.getRawParameterValue("LPFFreq");
     float inLFOFreqValue = *apvts.getRawParameterValue("LFO");
     bool inLFOActive = *apvts.getRawParameterValue("ActiveLFO");
-    bool inSyncMode = *apvts.getRawParameterValue("SyncMode");
+    bool inSyncActive = *apvts.getRawParameterValue("SyncActive");
     int inSyncTimeValue = *apvts.getRawParameterValue("SyncTime");
+    int inSyncTripletsActive = *apvts.getRawParameterValue("SyncTripletsActive");
+   
+    const float pi = juce::MathConstants<float>::pi;
 
-    if (inSyncMode)
+    if (inSyncActive)
     {
         if (getPlayHead() != nullptr)  
         {
             auto bpmValue = getPlayHead()->getPosition()->getBpm();
-
+          
             if (bpmValue.hasValue())
             {
                 // Convert sync time value to milliseconds
-              //  syncTimeHandler.setSyncMode(inSyncTimeValue);
-                inDelayTimeValue = syncTimeHandler.getSyncTimeInterval(inSyncMode, bpmValue);
+                inDelayTimeValue = syncTimeHandler.getSyncTimeInterval(inSyncTimeValue, bpmValue);
+                DBG(inDelayTimeValue);
             }
         }
+    } 
+    else
+    {
+
     }
 	
    delay.setDelayTimeValue(inDelayTimeValue);
@@ -194,6 +202,8 @@ void MiauDelay::updateParameters()
    dryWet.setDryWetValue(inDryWetValue);
    inputGain.setGainValue(inInputGainValue);
    outputGain.setGainValue(inOutputGainValue);
+   syncTimeHandler.setSyncActive(inSyncActive);
+   syncTimeHandler.setTripletsActive(inSyncTripletsActive);
    hpf.setHPFFreqValue(inHPFFreqValue);
    lpf.setLPFFreqValue(inLPFFreqValue);
    lfo.setFrequencyValue(inLFOFreqValue);
@@ -214,18 +224,19 @@ void MiauDelay::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
 
-    delay.process(buffer, totalNumInputChannels);
     inputGain.process(buffer);
-  
-    // TODO: unificar en una sola funci�n?
-    hpf.processHPF(buffer);
-    lpf.processLPF(buffer);
+
+    delay.process(buffer, totalNumInputChannels);
 
     if (lfoActive)
     {
         lfo.process(buffer);
     }
-
+  
+    // TODO: unificar en una sola funci�n?
+    hpf.processHPF(buffer);
+    lpf.processLPF(buffer);
+   
     dryWet.process(dryBuffer, buffer);
     outputGain.process(buffer);
 }

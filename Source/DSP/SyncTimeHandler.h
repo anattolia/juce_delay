@@ -8,10 +8,20 @@ public:
     SyncTimeHandler() {}
     ~SyncTimeHandler() {}
 
-    void setSyncMode(int inSyncMode)
+    void setSyncActive(bool inSyncActive)
     {
-        syncMode = inSyncMode;
+        syncActive = inSyncActive;
     }
+
+    void setTripletsActive(bool inTriplets)
+    {
+        triplets = inTriplets;
+    }
+
+    int SyncTimeHandler::getSyncActive() 
+    { 
+        return syncActive; 
+    };
 
     float getSyncTimeInterval(int choice, juce::Optional<double>& bpmValue)
     {
@@ -61,23 +71,25 @@ public:
             syncTimeInterval = static_cast<float> (beatInMilliseconds) / 4.0f;
 
         /** Triplets */
-        if (syncMode == 1)
+        if (triplets)
+        { 
             syncTimeInterval *= (2.0f / 3.0f);
-
+        }
         /** Dotted */
-        else if (syncMode == 2)
-            syncTimeInterval *= (1.5f);
+        
+       // else if (syncMode == 2)
+         //  syncTimeInterval *= (1.5f);
 
         return syncTimeInterval;
     }
 
 private:
+    double currentBpm { 120.0 };
+    double beatInMilliseconds { 500.0 };
+	float timeInterval { 0.0f }; // Default to 1 (1 beat)
 
-    double currentBpm{ 120.0 };
-    double beatInMilliseconds{ 500.0 };
-	float timeInterval{ 0.0f }; // Default to 1 (1 beat)
-
-    int syncMode{ 0 };
+    bool triplets { false };
+    bool syncActive { false };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SyncTimeHandler)
 };

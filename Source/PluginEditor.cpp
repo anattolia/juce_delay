@@ -1,4 +1,4 @@
-/*
+﻿/*
   ==============================================================================
 
     This file contains the basic framework code for a JUCE plugin editor.
@@ -47,7 +47,7 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor (MiauDelay& p)
     lpfAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LPFFreq", lpfSlider);
 
     // Configurar el componente de tap tempo
-    // Callback para actualizar el par�metro DelayTime mapeando newDelayTime de ms a un valor normalizado
+    // Callback para actualizar el parámetro DelayTime mapeando newDelayTime de ms a un valor normalizado
     tapTempoComp.setTapCallback([this](double newDelayTime)
         {
             float normalizedValue = static_cast<float>(newDelayTime / 5000.00f);
@@ -57,7 +57,34 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor (MiauDelay& p)
     );
 
       addAndMakeVisible(tapTempoComp);
-    
+
+    // sync
+    syncActive.setClickingTogglesState(true);
+    syncActive.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::grey);
+    syncActive.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::pink);
+    syncActiveAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "SyncActive", syncActive);
+    syncActive.onClick = []
+        {
+         //   DBG("Click sync");
+        };
+    syncActive.setImages(false, true, true, huellaImage, 1.0, juce::Colours::grey, huellaImage, 0.3, juce::Colours::grey, huellaImage, 0.3, juce::Colours::greenyellow);
+    addAndMakeVisible(syncActive);
+
+	syncChoiceCombo.addItem("1", 1);
+    syncChoiceCombo.addItem("1/2", 2);
+    syncChoiceCombo.addItem("1/4", 3);
+    syncChoiceCombo.addItem("1/8", 4);
+    syncChoiceCombo.setJustificationType(juce::Justification::centred);
+
+    syncChoiceAttach = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "SyncTime", syncChoiceCombo);
+    addAndMakeVisible(syncChoiceCombo);
+
+    syncTripletsActive.setClickingTogglesState(true);
+    syncTripletsActive.setImages(false, true, true, tresilloImage, 1.0, juce::Colours::grey, tresilloImage, 0.3, juce::Colours::grey, tresilloImage, 0.3, juce::Colours::greenyellow);
+
+  //  syncTripletsAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "SyncTripletsActive", syncTripletsActive);
+    addAndMakeVisible(syncTripletsActive);
+
     // lfo slider
     prepareSlider(lfoSlider);
     lfoAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LFO", lfoSlider);
@@ -68,12 +95,22 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor (MiauDelay& p)
     lfoActive.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::white);
     lfoActive.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::darkgreen);
 
-
     lfoActiveAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "ActiveLFO", lfoActive);
     lfoActive.onClick = []
         {
           //  DBG("Click");
         };
+
+	// LFO choice combo
+   // lfoChoiceCombo.addItem("Sine", 1);
+   // lfoChoiceCombo.addItem("Triangle", 2);
+   // lfoChoiceCombo.addItem("Saw", 3);
+   // lfoChoiceCombo.addItem("Square", 4);
+   // lfoChoiceCombo.setJustificationType(juce::Justification::centred);
+   // addAndMakeVisible(lfoChoiceCombo);
+
+   // lfoChoiceAttach = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "LFOChoice", lfoChoiceCombo);
+
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -84,9 +121,6 @@ MiauDelayAudioProcessorEditor::~MiauDelayAudioProcessorEditor()
 {
   delayTimeSlider.setLookAndFeel(nullptr);
   delayTimeSlider.removeListener(this);
-
- // tapTempoComp.setLookAndFeel(nullptr);
- // tapTempoComp.removeComponentListener(this);
 
   feedbackSlider.setLookAndFeel(nullptr);
   feedbackSlider.removeListener(this);
@@ -117,7 +151,6 @@ void MiauDelayAudioProcessorEditor::prepareSlider(juce::Slider& slider)
     addAndMakeVisible(slider);
 
    slider.setLookAndFeel(&sliderLookAndFeel);
-  // tapTempoComp.setLookAndFeel(&buttonLookAndFeel);
    slider.addListener(this);
 }
 
@@ -134,19 +167,26 @@ void MiauDelayAudioProcessorEditor::resized()
     tapTempoComp.setBounds(49, 235, 24, 24);
     feedbackSlider.setBounds(78, 341, 173, 42);
 	dryWetSlider.setBounds(418, 346, 173, 42);
+
+	syncActive.setBounds(119, 235, 24, 24);
+	syncChoiceCombo.setBounds(170, 245, 70, 24);
+    syncTripletsActive.setBounds(250, 245, 55, 24);
+
     inputGainSlider.setBounds(418, 55, 173, 42);
     outputGainSlider.setBounds(418, 428, 173, 42);
+
     hpfSlider.setBounds(418, 158, 173, 42);
     lpfSlider.setBounds(418, 231, 173, 42);
-    lfoSlider.setBounds(78, 430, 173, 42);
 
+    lfoSlider.setBounds(78, 430, 173, 42);
     lfoActive.setBounds(201, 410, 16, 17);
+//    lfoChoiceCombo.setBounds(0, 0, 100, 24);
 }
 
 void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)
 {
     if (s == &inputGainSlider)
     {
-       DBG ("feedbackSlider changed: " << feedbackSlider.getValue());
+      // DBG ("feedbackSlider changed: " << feedbackSlider.getValue());
     }
 }

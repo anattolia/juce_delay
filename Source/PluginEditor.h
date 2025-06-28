@@ -1,4 +1,4 @@
-/*
+﻿/*
   ==============================================================================
 
     This file contains the basic framework code for a JUCE plugin editor.
@@ -29,7 +29,7 @@ public:
 
     void sliderValueChanged(juce::Slider*) override;
 
-	// Funci�n para preparar los sliders
+	// Función para preparar los sliders
     void prepareSlider(juce::Slider& slider);
 
   //  void prepareButton(juce::Button& button);
@@ -38,7 +38,16 @@ private:
     MiauDelay& audioProcessor;
 
     juce::Slider delayTimeSlider, feedbackSlider, dryWetSlider, inputGainSlider, outputGainSlider, hpfSlider, lpfSlider, lfoSlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>  delayTimeAttach, feedbackAttach, dryWetAttach, inputGainAttach, outputGainAttach, hpfAttach, lpfAttach, lfoAttach;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>  delayTimeAttach, feedbackAttach, dryWetAttach, inputGainAttach, outputGainAttach, hpfAttach, lpfAttach, lfoAttach; //, syncActiveAttach;
+
+    juce::ImageButton syncActive;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> syncActiveAttach;
+
+    juce::ComboBox syncChoiceCombo;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> syncChoiceAttach;
+
+    juce::ImageButton syncTripletsActive;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> syncTripletsAttach;
 
     juce::TextButton lfoActive;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lfoActiveAttach;
@@ -48,6 +57,10 @@ private:
 
     juce::Image backgroundImage;
     juce::ImageComponent backgroundComponent;
+
+    juce::Image huellaImage{ juce::ImageCache::getFromMemory(BinaryData::huella_png, BinaryData::huella_pngSize) };
+    juce::Image tresilloImage{ juce::ImageCache::getFromMemory(BinaryData::tresillo_png, BinaryData::tresillo_pngSize) };
+
 
     SliderLookAndFeel sliderLookAndFeel;
     //ButtonLookAndFeel buttonLookAndFeel;
