@@ -18,10 +18,10 @@ public:
         triplets = inTriplets;
     }
 
-    int SyncTimeHandler::getSyncActive() 
+    int getSyncActive() 
     { 
         return syncActive; 
-    };
+    }
 
     float getSyncTimeInterval(int choice, juce::Optional<double>& bpmValue)
     {

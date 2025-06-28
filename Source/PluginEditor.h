@@ -31,20 +31,20 @@ public:
 
 	// Función para preparar los sliders
     void prepareSlider(juce::Slider& slider);
+    
+    // Update slider visibility based on sync state
+    void updateSliderVisibility();
 
   //  void prepareButton(juce::Button& button);
 
 private:
     MiauDelay& audioProcessor;
 
-    juce::Slider delayTimeSlider, feedbackSlider, dryWetSlider, inputGainSlider, outputGainSlider, hpfSlider, lpfSlider, lfoSlider;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>  delayTimeAttach, feedbackAttach, dryWetAttach, inputGainAttach, outputGainAttach, hpfAttach, lpfAttach, lfoAttach; //, syncActiveAttach;
+    juce::Slider delayTimeSlider, feedbackSlider, dryWetSlider, inputGainSlider, outputGainSlider, hpfSlider, lpfSlider, lfoSlider, syncTimeSlider;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>  delayTimeAttach, feedbackAttach, dryWetAttach, inputGainAttach, outputGainAttach, hpfAttach, lpfAttach, lfoAttach, syncTimeAttach; //, syncActiveAttach;
 
     juce::ImageButton syncActive;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> syncActiveAttach;
-
-    juce::ComboBox syncChoiceCombo;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> syncChoiceAttach;
 
     juce::ImageButton syncTripletsActive;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> syncTripletsAttach;
