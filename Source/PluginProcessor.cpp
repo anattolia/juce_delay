@@ -22,6 +22,8 @@ MiauDelay::MiauDelay()
                        ), apvts(*this, nullptr, "Parameters", createParameters())
 #endif
 {
+    // Create default presets on first run
+    createDefaultPresets();
 }
 
 MiauDelay::~MiauDelay()
@@ -269,6 +271,121 @@ void MiauDelay::setStateInformation (const void* data, int sizeInBytes)
             auto state = juce::ValueTree::fromXml(*xmlState);
             apvts.replaceState(state);
         }
+    }
+}
+
+//==============================================================================
+// Preset Management
+//==============================================================================
+
+juce::File MiauDelay::getPresetDirectory()
+{
+    auto userDocuments = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory);
+    auto presetDir = userDocuments.getChildFile("MiauDelay").getChildFile("Presets");
+    
+    if (!presetDir.exists())
+        presetDir.createDirectory();
+        
+    return presetDir;
+}
+
+void MiauDelay::savePreset(const juce::String& presetName)
+{
+    auto presetDir = getPresetDirectory();
+    auto presetFile = presetDir.getChildFile(presetName + ".xml");
+    
+    // Get current state as XML
+    juce::MemoryBlock memoryBlock;
+    getStateInformation(memoryBlock);
+    
+    auto xmlState = getXmlFromBinary(memoryBlock.getData(), (int)memoryBlock.getSize());
+    
+    if (xmlState != nullptr)
+    {
+        xmlState->writeTo(presetFile);
+        currentPresetName = presetName;
+    }
+}
+
+void MiauDelay::loadPreset(const juce::String& presetName)
+{
+    auto presetDir = getPresetDirectory();
+    auto presetFile = presetDir.getChildFile(presetName + ".xml");
+    
+    if (presetFile.existsAsFile())
+    {
+        auto xmlState = juce::XmlDocument::parse(presetFile);
+        
+        if (xmlState != nullptr)
+        {
+            juce::MemoryBlock memoryBlock;
+            copyXmlToBinary(*xmlState, memoryBlock);
+            setStateInformation(memoryBlock.getData(), (int)memoryBlock.getSize());
+            currentPresetName = presetName;
+        }
+    }
+}
+
+juce::StringArray MiauDelay::getPresetList()
+{
+    juce::StringArray presetList;
+    auto presetDir = getPresetDirectory();
+    
+    juce::RangedDirectoryIterator iter(presetDir, false, "*.xml");
+    
+    for (auto& entry : iter)
+    {
+        auto fileName = entry.getFile().getFileNameWithoutExtension();
+        presetList.add(fileName);
+    }
+    
+    presetList.sort(false); // Sort alphabetically
+    return presetList;
+}
+
+void MiauDelay::createDefaultPresets()
+{
+    auto presetDir = getPresetDirectory();
+    
+    // Only create defaults if no presets exist
+    if (getPresetList().isEmpty())
+    {
+        // Short Delay
+        apvts.getParameter("DelayTime")->setValueNotifyingHost(0.05f); // 250ms
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.3f);
+        apvts.getParameter("DryWet")->setValueNotifyingHost(0.3f);
+        apvts.getParameter("InputGain")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("OutputGain")->setValueNotifyingHost(0.5f);
+        savePreset("Short Delay");
+        
+        // Long Echo
+        apvts.getParameter("DelayTime")->setValueNotifyingHost(0.6f); // 3000ms
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.6f);
+        apvts.getParameter("DryWet")->setValueNotifyingHost(0.5f);
+        savePreset("Long Echo");
+        
+        // Sync Quarter Note
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("SyncTime")->setValueNotifyingHost(0.666f); // 1/4 note (index 2, normalized)
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.4f);
+        apvts.getParameter("DryWet")->setValueNotifyingHost(0.4f);
+        savePreset("Sync 1/4");
+        
+        // LFO Wobble
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("DelayTime")->setValueNotifyingHost(0.1f); // 500ms
+        apvts.getParameter("ActiveLFO")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("LFO")->setValueNotifyingHost(0.2f); // Slow LFO
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.5f);
+        savePreset("LFO Wobble");
+        
+        // Reset to default state
+        apvts.getParameter("DelayTime")->setValueNotifyingHost(0.05f);
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("DryWet")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("ActiveLFO")->setValueNotifyingHost(0.0f);
+        currentPresetName = "Default";
     }
 }
 

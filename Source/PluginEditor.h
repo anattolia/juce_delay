@@ -54,6 +54,15 @@ private:
 
     juce::ComboBox lfoChoiceCombo;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> lfoChoiceAttach;
+    
+    // Preset management UI
+    juce::ComboBox presetCombo;
+    juce::TextButton savePresetButton{"Save"};
+    juce::TextButton loadPresetButton{"Load"};
+    
+    void updatePresetCombo();
+    void savePresetButtonClicked();
+    void loadPresetButtonClicked();
 
     juce::Image backgroundImage;
     juce::ImageComponent backgroundComponent;

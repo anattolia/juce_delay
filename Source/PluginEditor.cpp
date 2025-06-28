@@ -116,6 +116,24 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor (MiauDelay& p)
 
    // lfoChoiceAttach = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "LFOChoice", lfoChoiceCombo);
 
+    // Preset management UI
+    presetCombo.setJustificationType(juce::Justification::centred);
+    presetCombo.setTextWhenNothingSelected("Select Preset");
+    presetCombo.onChange = [this] {
+        if (presetCombo.getSelectedId() > 0) {
+            auto selectedPreset = presetCombo.getText();
+            audioProcessor.loadPreset(selectedPreset);
+        }
+    };
+    addAndMakeVisible(presetCombo);
+    
+    savePresetButton.onClick = [this] { savePresetButtonClicked(); };
+    addAndMakeVisible(savePresetButton);
+    
+    loadPresetButton.onClick = [this] { loadPresetButtonClicked(); };
+    addAndMakeVisible(loadPresetButton);
+    
+    updatePresetCombo();
 
     // Set initial slider visibility based on sync state
     updateSliderVisibility();
@@ -201,6 +219,11 @@ void MiauDelayAudioProcessorEditor::resized()
 
     lfoSlider.setBounds(78, 430, 173, 42);
     lfoActive.setBounds(201, 410, 16, 17);
+    
+    // Preset management UI positioning (top area)
+    presetCombo.setBounds(50, 20, 150, 25);
+    savePresetButton.setBounds(210, 20, 60, 25);
+    loadPresetButton.setBounds(280, 20, 60, 25);
 }
 
 void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)
@@ -209,4 +232,54 @@ void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)
     {
       // DBG ("feedbackSlider changed: " << feedbackSlider.getValue());
     }
+}
+
+//==============================================================================
+// Preset Management Methods
+//==============================================================================
+
+void MiauDelayAudioProcessorEditor::updatePresetCombo()
+{
+    presetCombo.clear();
+    auto presetList = audioProcessor.getPresetList();
+    
+    for (int i = 0; i < presetList.size(); ++i)
+    {
+        presetCombo.addItem(presetList[i], i + 1);
+    }
+    
+    // Update the selection to match current preset
+    auto currentPreset = audioProcessor.getCurrentPresetName();
+    if (currentPreset.isNotEmpty())
+    {
+        presetCombo.setText(currentPreset, juce::dontSendNotification);
+    }
+}
+
+void MiauDelayAudioProcessorEditor::savePresetButtonClicked()
+{
+    auto* alertWindow = new juce::AlertWindow("Save Preset", "Enter a name for your preset:", juce::AlertWindow::QuestionIcon);
+    alertWindow->addTextEditor("presetName", "New Preset", "Preset Name:");
+    alertWindow->addButton("Save", 1, juce::KeyPress(juce::KeyPress::returnKey, 0, 0));
+    alertWindow->addButton("Cancel", 0, juce::KeyPress(juce::KeyPress::escapeKey, 0, 0));
+    
+    alertWindow->enterModalState(true, juce::ModalCallbackFunction::create([this, alertWindow](int result)
+    {
+        if (result == 1) // if user pressed save
+        {
+            auto presetName = alertWindow->getTextEditorContents("presetName");
+            if (presetName.isNotEmpty())
+            {
+                audioProcessor.savePreset(presetName);
+                updatePresetCombo();
+                presetCombo.setText(presetName, juce::dontSendNotification);
+            }
+        }
+        delete alertWindow;
+    }));
+}
+
+void MiauDelayAudioProcessorEditor::loadPresetButtonClicked()
+{
+    updatePresetCombo(); // Refresh the list in case new presets were added externally
 }

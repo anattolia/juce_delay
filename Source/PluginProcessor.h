@@ -66,6 +66,19 @@ public:
 
     void updateParameters();
     
+    // Preset management
+    void savePreset(const juce::String& presetName);
+    void loadPreset(const juce::String& presetName);
+    juce::StringArray getPresetList();
+    juce::File getPresetDirectory();
+    
+    // Current preset tracking
+    juce::String getCurrentPresetName() const { return currentPresetName; }
+    void setCurrentPresetName(const juce::String& name) { currentPresetName = name; }
+    
+    // Initialize default presets
+    void createDefaultPresets();
+    
 private:
     Delay delay;
     DryWet dryWet;
@@ -79,6 +92,9 @@ private:
     juce::AudioBuffer<float> dryBuffer;
 
     bool lfoActive{ false };
+    
+    // Preset management
+    juce::String currentPresetName = "Default";
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MiauDelay)
