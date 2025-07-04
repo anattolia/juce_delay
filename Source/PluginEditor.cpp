@@ -198,7 +198,7 @@ void MiauDelayAudioProcessorEditor::resized()
     lpfSlider.setBounds(418, 228, 173, 42);
 
     lfoSlider.setBounds(78, 422, 173, 42);
-    lfoActive.setBounds(196, 399, 20, 20);
+    lfoActive.setBounds(225, 399, 20, 20);
 }
 
 void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)

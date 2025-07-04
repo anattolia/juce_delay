@@ -16,7 +16,7 @@
             file="LookAndFeel/SliderLookAndFeel.h"/>
     </GROUP>
     <GROUP id="{EC29E0F4-7DFE-3DFF-CEF9-0E57BB25BA0F}" name="Assets">
-      <FILE id="lLG1P5" name="miau.png" compile="0" resource="1" file="Assets/miau.png"/>
+      <FILE id="PEOaX1" name="miau.png" compile="0" resource="1" file="Assets/miau.png"/>
       <FILE id="lGpEEx" name="tresillo.png" compile="0" resource="1" file="Assets/tresillo.png"/>
       <FILE id="Rrb1FJ" name="huella.png" compile="0" resource="1" file="Assets/huella.png"/>
     </GROUP>
