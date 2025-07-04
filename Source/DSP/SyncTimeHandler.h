@@ -32,23 +32,26 @@ public:
             (choice)
         {
         case 0: /** 1 */
-            timeInterval = 0.0f;
+            timeInterval = 1.0f;
             break;
         case 1: /** 1/2 */
-            timeInterval = 0.25f;
+            timeInterval = 0.75f;
             break;
         case 2: /** 1/4 */
             timeInterval = 0.5f;
             break;
         case 3: /** 1/8 */
-            timeInterval = 0.75f;
+            timeInterval = 0.25f;
+            break;
+        case 4: /** 1/16 */
+            timeInterval = 0.0f;
             break;
         default:
-            timeInterval = 1.0f;
+            timeInterval = 0.5f;
             break;
         }
 
-        /** Convert BPM to time in milliseconds */
+        /** Convertir BPM a tiempo en milisegundos */
         if (*bpmValue != currentBpm)
         {
             currentBpm = *bpmValue;
@@ -74,7 +77,6 @@ public:
         if (triplets)
         {
             syncTimeInterval *= (2.0f / 3.0f);
-            DBG("triplets" << syncTimeInterval);
         }
         /** Dotted */
 

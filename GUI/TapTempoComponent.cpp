@@ -2,7 +2,7 @@
 
 TapTempoComponent::TapTempoComponent()
 {
-    tapButton.setImages(false, true, true, buttonImage, 1.0, juce::Colours::black, buttonImage, 0.3, juce::Colours::white, buttonImage, 0.3, juce::Colours::darkgreen);
+    tapButton.setImages(false, true, true, buttonImage, 0.01, juce::Colours::black, buttonImage, 0.3, juce::Colours::black, buttonImage, 0.3, juce::Colour(251, 222, 89));
     addAndMakeVisible(tapButton);
     tapButton.onClick = [this] { tapButtonClicked(); };
 }

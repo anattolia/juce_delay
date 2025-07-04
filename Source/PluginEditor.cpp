@@ -55,56 +55,56 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor(MiauDelay& p)
             // DBG("Nuevo delay time desde TapTempo: " << newDelayTime << "ms");
         }
     );
-
     addAndMakeVisible(tapTempoComp);
 
-    // sync
+    // sync active
     syncActive.setClickingTogglesState(true);
-    syncActive.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::grey);
-    syncActive.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::pink);
     syncActiveAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "SyncActive", syncActive);
     syncActive.onClick = [this]
         {
             updateSliderVisibility();
         };
-    syncActive.setImages(false, true, true, huellaImage, 1.0, juce::Colours::grey, huellaImage, 0.3, juce::Colours::grey, huellaImage, 0.3, juce::Colours::greenyellow);
+    syncActive.setImages(false, true, true, huellaImg, 0.5, juce::Colour(230, 255, 255), huellaImg, 0.5, juce::Colour(230, 255, 255), huellaImg, 0.8, juce::Colour(251, 222, 89));
     addAndMakeVisible(syncActive);
 
     // Sync time slider
     prepareSlider(syncTimeSlider);
     syncTimeSlider.setRange(1, 4, 1);  // 4 discrete positions
     syncTimeSlider.setValue(3);  // Default to 1/4
-    syncTimeSlider.textFromValueFunction = [](double value) {
+    syncTimeSlider.textFromValueFunction = [](double value) 
+        {
         switch (static_cast<int>(value)) {
-        case 1: return juce::String("1");
-        case 2: return juce::String("1/2");
+        case 1: return juce::String("1/16");
+        case 2: return juce::String("1/8");
         case 3: return juce::String("1/4");
-        case 4: return juce::String("1/8");
+        case 4: return juce::String("1/2");
+        case 5: return juce::String("1");
         default: return juce::String("1/4");
         }
-        };
+     };
     syncTimeAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "SyncTime", syncTimeSlider);
 
+	// sync triplets active
     syncTripletsActive.setClickingTogglesState(true);
-    syncTripletsActive.setImages(false, true, true, tresilloImage, 1.0, juce::Colours::grey, tresilloImage, 0.3, juce::Colours::grey, tresilloImage, 0.3, juce::Colours::greenyellow);
-
+    syncTripletsActive.setImages(false, true, true, tresilloImg, 0.3, juce::Colour(230, 255, 255), tresilloImg, 0.3, juce::Colour(230, 255, 255), tresilloImg, 1.0, juce::Colour(251, 222, 89));
     syncTripletsAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "SyncTripletsActive", syncTripletsActive);
     addAndMakeVisible(syncTripletsActive);
 
     // lfo slider
     prepareSlider(lfoSlider);
     lfoAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LFO", lfoSlider);
+
+    // lfo active
     lfoActive.setClickingTogglesState(true);
-
-    addAndMakeVisible(lfoActive);
-    lfoActive.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::white);
-    lfoActive.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::darkgreen);
-
+    lfoActive.setImages(false, true, true, huellaImg, 0.3, juce::Colour(230, 255, 255), huellaImg, 0.3, juce::Colour(230, 255, 255), huellaImg, 1.0, juce::Colour(251, 222, 89));
     lfoActiveAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "ActiveLFO", lfoActive);
-    lfoActive.onClick = []
+    addAndMakeVisible(lfoActive);
+
+    /* lfoActive.onClick = []
         {
             //  DBG("Click");
         };
+   */
 
     // LFO choice combo
    // lfoChoiceCombo.addItem("Sine", 1);
@@ -113,9 +113,7 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor(MiauDelay& p)
    // lfoChoiceCombo.addItem("Square", 4);
    // lfoChoiceCombo.setJustificationType(juce::Justification::centred);
    // addAndMakeVisible(lfoChoiceCombo);
-
    // lfoChoiceAttach = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "LFOChoice", lfoChoiceCombo);
-
 
     // Set initial slider visibility based on sync state
     updateSliderVisibility();
@@ -182,25 +180,25 @@ void MiauDelayAudioProcessorEditor::resized()
 {
     backgroundComponent.setBounds(getLocalBounds());
 
-    // Position both delay time sliders in the same location
-    delayTimeSlider.setBounds(78, 167, 173, 42);
-    syncTimeSlider.setBounds(78, 167, 173, 42);
+    // Poner los sliders del delaytime en ms y en figuras en la misma posición 
+    delayTimeSlider.setBounds(78, 165, 173, 42);
+    syncTimeSlider.setBounds(78, 165, 173, 42);
 
-    tapTempoComp.setBounds(49, 235, 24, 24);
-    feedbackSlider.setBounds(78, 341, 173, 42);
+    tapTempoComp.setBounds(49, 235, 20, 20);
+    feedbackSlider.setBounds(78, 333, 173, 42);
     dryWetSlider.setBounds(418, 346, 173, 42);
 
-    syncActive.setBounds(119, 235, 24, 24);
-    syncTripletsActive.setBounds(250, 245, 55, 24);
+    syncActive.setBounds(123, 235, 20, 20);
+    syncTripletsActive.setBounds(156, 240, 62, 31);
 
     inputGainSlider.setBounds(418, 55, 173, 42);
-    outputGainSlider.setBounds(418, 428, 173, 42);
+    outputGainSlider.setBounds(418, 423, 173, 42);
 
-    hpfSlider.setBounds(418, 158, 173, 42);
-    lpfSlider.setBounds(418, 231, 173, 42);
+    hpfSlider.setBounds(418, 155, 173, 42);
+    lpfSlider.setBounds(418, 228, 173, 42);
 
-    lfoSlider.setBounds(78, 430, 173, 42);
-    lfoActive.setBounds(201, 410, 16, 17);
+    lfoSlider.setBounds(78, 422, 173, 42);
+    lfoActive.setBounds(196, 399, 20, 20);
 }
 
 void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)

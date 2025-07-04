@@ -47,7 +47,7 @@ private:
     juce::ImageButton syncTripletsActive;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> syncTripletsAttach;
 
-    juce::TextButton lfoActive;
+    juce::ImageButton lfoActive;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lfoActiveAttach;
 
     juce::ComboBox lfoChoiceCombo;
@@ -56,12 +56,11 @@ private:
     juce::Image backgroundImage;
     juce::ImageComponent backgroundComponent;
 
-    juce::Image huellaImage{ juce::ImageCache::getFromMemory(BinaryData::huella_png, BinaryData::huella_pngSize) };
-    juce::Image tresilloImage{ juce::ImageCache::getFromMemory(BinaryData::tresillo_png, BinaryData::tresillo_pngSize) };
+    juce::Image huellaImg{ juce::ImageCache::getFromMemory(BinaryData::huella_png, BinaryData::huella_pngSize) };
+    juce::Image tresilloImg{ juce::ImageCache::getFromMemory(BinaryData::tresillo_png, BinaryData::tresillo_pngSize) };
 
 
     SliderLookAndFeel sliderLookAndFeel;
-    //ButtonLookAndFeel buttonLookAndFeel;
 
     TapTempoComponent tapTempoComp;
 

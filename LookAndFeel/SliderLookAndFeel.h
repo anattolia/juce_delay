@@ -17,9 +17,9 @@ public:
 
 	SliderLookAndFeel()
 	{
-		setColour(juce::Slider::thumbColourId, juce::Colours::darkgreen);
+		setColour(juce::Slider::thumbColourId, juce::Colour(251, 222, 89));
 		setColour(juce::Slider::trackColourId, juce::Colours::white);
-		setColour(juce::Slider::backgroundColourId, juce::Colours::darkgrey);
+		setColour(juce::Slider::backgroundColourId, juce::Colour(114, 185, 133));
 	}
 
 	virtual ~SliderLookAndFeel() {}
@@ -31,6 +31,7 @@ public:
 		// Draw the track
 		g.setColour(findColour(juce::Slider::trackColourId));
 		g.fillRect(x, y + height / 2 - 2, width, 4);
+	//	g.strokePath()
 		// Draw the thumb
 		g.setColour(findColour(juce::Slider::thumbColourId));
 		g.fillRect(static_cast<int>(sliderPos - 5), y + height - 18, 15, 15);
