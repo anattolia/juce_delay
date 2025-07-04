@@ -16,7 +16,7 @@ Filter::~Filter() {};
 
 void Filter::prepare(juce::dsp::ProcessSpec& spec)
 {
-// high Pass Filter
+    // high Pass Filter
     hpf.prepare(spec);
     hpf.setType(juce::dsp::StateVariableTPTFilterType::highpass);
     hpf.setCutoffFrequency(20.0f);
@@ -44,13 +44,6 @@ void Filter::processLPF(juce::AudioBuffer<float>& buffer) {
     lpf.setCutoffFrequency(lpfFreq);
     lpf.process(context);
 }
-
-/* void Filter::process(juce::AudioBuffer<float>& buffer, Filter filter) {
-    auto audioBlock = juce::dsp::AudioBlock<float>(buffer);
-    auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
-
-    filter.process(context);
-}*/
 
 void Filter::setHPFFreqValue(float newFreqValue)
 {

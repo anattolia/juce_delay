@@ -56,7 +56,7 @@ void LFO::process(juce::AudioBuffer<float>& buffer)
 
 			time[channel] += deltaTime[channel];
 
-            // Reset time variable
+            // Resetear la variable tiempo
 			if (time[channel] >= 1.0f)
 			{
 				time[channel] = 0.0f;
@@ -125,5 +125,4 @@ float LFO::sawtoothWave(int channel)
     float localTime = fmod(time[channel], fullPeriodTime);
 
     return (localTime / fullPeriodTime);
-
 }

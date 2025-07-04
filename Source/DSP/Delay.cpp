@@ -25,7 +25,7 @@ void Delay::setFeedbackValue(float newFeedbackValue){
 
 void Delay::fillDelayBuffer(int channel, const int bufferLength, const int delayBufferLength, const float* bufferData, const float* delayBufferData)
 {
-    // Calculate read position for feedback
+    // Calcular la posición de lectura para el feedback
     const int feedbackReadPosition = static_cast<int> (delayBufferLength + mWritePosition - (mSampleRate * delayTimeMsValue / 1000)) % delayBufferLength;
 
     if (delayBufferLength > bufferLength + mWritePosition) {
@@ -66,12 +66,12 @@ void Delay::getFromDelayBuffer(juce::AudioBuffer<float>& buffer, int channel, co
 
 void Delay::prepare(double sampleRate, int samplesPerBlock)
 {
-    const int numInputChannels = 2; // Assuming stereo buffer
-    const int delayBufferSize = 5 * (sampleRate + samplesPerBlock); // the number of seconds available for the delay
+    const int numInputChannels = 2; // Asumiendo un buffer estéreo
+    const int delayBufferSize = 5 * (sampleRate + samplesPerBlock); // el número de segundos disponibles para el delay
     mSampleRate = sampleRate;
     mDelayBuffer.setSize(numInputChannels, delayBufferSize);
-    mDelayBuffer.clear(); // <-- Clear buffer to avoid garbage values
-    mWritePosition = 0;   // <-- Reset write position
+    mDelayBuffer.clear(); // <-- Limpiar buffer para evitar valores basura
+    mWritePosition = 0;   // <-- Resetear la posición de escritura
 }
 
 void Delay::process(juce::AudioBuffer<float>& buffer, int numInputChannels) {
@@ -88,5 +88,5 @@ void Delay::process(juce::AudioBuffer<float>& buffer, int numInputChannels) {
     }
 
     mWritePosition += bufferLength;
-    mWritePosition %= delayBufferLength; // Asegurarse de que no se salga del l�mite
+    mWritePosition %= delayBufferLength; // Asegurarse de que no se salga del límite
 }

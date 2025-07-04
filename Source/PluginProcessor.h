@@ -18,7 +18,7 @@
 
 //==============================================================================
 /**
-* Tomado de: Juce Tutorial 40- Building a Delay Plugin Pt 1 (Creating a Circular Buffer)
+* Punto de partida: Juce Tutorial 40- Building a Delay Plugin Pt 1 (Creating a Circular Buffer)
 https://youtu.be/IRFUYGkMV8w?si=1tu4UudHqNJSYpe2
 */
 class MiauDelay  : public juce::AudioProcessor

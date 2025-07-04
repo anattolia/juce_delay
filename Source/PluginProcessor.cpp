@@ -31,7 +31,7 @@ MiauDelay::~MiauDelay()
 juce::AudioProcessorValueTreeState::ParameterLayout MiauDelay::createParameters()
 {
     juce::AudioProcessorValueTreeState::ParameterLayout parameters;
-    auto waves = juce::StringArray("Sine", "Square", "Saw", "Triangle");
+//    auto waves = juce::StringArray("Sine", "Square", "Saw", "Triangle");
 
     // Par�metros del tiempo del delay
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "DelayTime", 1 }, "DelayTime", 0, 5000, 250));
@@ -42,11 +42,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout MiauDelay::createParameters(
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "HPFFreq", 1 }, "HPFFreq", 0, 500, 0));
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "LPFFreq", 1 }, "LPFFreq", 2000, 20000, 20000));
     parameters.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "SyncActive", 1 }, "SyncActive", false));
-    parameters.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "SyncTime", 1 }, "SyncTime", juce::StringArray{ "1", "1/2", "1/4", "1/8" }, 0));
+    parameters.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "SyncTime", 1 }, "SyncTime", juce::StringArray{ "1/16", "1/8", "1/4", "1/2", "1"}, 0));
     parameters.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "SyncTripletsActive", 1 }, "SyncTripletsActive", false));
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "LFO", 1 }, "LFO", 0.01f, 500.0f, 200.0f));
-    parameters.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "LFOChoice", 1 }, "LFOChoice", waves, 0));
     parameters.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "ActiveLFO", 1 }, "ActiveLFO", false));
+
+    // parámetro para cambiar el tipo de onda del LFO, por ahora no se usa
+    // parameters.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "LFOChoice", 1 }, "LFOChoice", waves, 0));
 
     return parameters;
 }
@@ -188,12 +190,8 @@ void MiauDelay::updateParameters()
             {
                 // Convert sync time value to milliseconds
                 inDelayTimeValue = syncTimeHandler.getSyncTimeInterval(inSyncTimeValue, bpmValue);
-                DBG(inDelayTimeValue);
             }
         }
-    } 
-    else
-    {
     }
 	
    delay.setDelayTimeValue(inDelayTimeValue);
@@ -207,7 +205,7 @@ void MiauDelay::updateParameters()
    lpf.setLPFFreqValue(inLPFFreqValue);
    lfo.setFrequencyValue(inLFOFreqValue);
    lfoActive = inLFOActive;
-   lfo.setChoiceValue(*apvts.getRawParameterValue("LFOChoice")); // TODO ¿Por qué no se puede hacer como los demás?
+ //  lfo.setChoiceValue(*apvts.getRawParameterValue("LFOChoice"));
 }
 
 void MiauDelay::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
