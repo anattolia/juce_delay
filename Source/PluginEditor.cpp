@@ -115,6 +115,27 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor(MiauDelay& p)
    // addAndMakeVisible(lfoChoiceCombo);
    // lfoChoiceAttach = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "LFOChoice", lfoChoiceCombo);
 
+    // Interfaz de Preset managment
+    presetCombo.setJustificationType(juce::Justification::centred);
+    presetCombo.setTextWhenNothingSelected("Select Preset");
+    presetCombo.setColour(juce::ComboBox::backgroundColourId, juce::Colour(158, 188, 194));
+    presetCombo.onChange = [this] {
+        if (presetCombo.getSelectedId() > 0) {
+            auto selectedPreset = presetCombo.getText();
+            audioProcessor.loadPreset(selectedPreset);
+        }
+        };
+    addAndMakeVisible(presetCombo);
+
+    savePresetButton.onClick = [this] { savePresetButtonClicked(); };
+	savePresetButton.setColour(juce::TextButton::buttonColourId, juce::Colour(158, 188, 194));
+    addAndMakeVisible(savePresetButton);
+
+    // loadPresetButton.onClick = [this] { loadPresetButtonClicked(); };
+    // addAndMakeVisible(loadPresetButton);
+
+    updatePresetCombo();
+
     // Set initial slider visibility based on sync state
     updateSliderVisibility();
 
@@ -181,24 +202,32 @@ void MiauDelayAudioProcessorEditor::resized()
     backgroundComponent.setBounds(getLocalBounds());
 
     // Poner los sliders del delaytime en ms y en figuras en la misma posición 
-    delayTimeSlider.setBounds(78, 165, 173, 42);
-    syncTimeSlider.setBounds(78, 165, 173, 42);
+    delayTimeSlider.setBounds(78, 174, 173, 42);
+    syncTimeSlider.setBounds(78, 174, 173, 42);
 
-    tapTempoComp.setBounds(49, 235, 20, 20);
-    feedbackSlider.setBounds(78, 333, 173, 42);
-    dryWetSlider.setBounds(418, 346, 173, 42);
+    tapTempoComp.setBounds(49, 244, 20, 20);
+    feedbackSlider.setBounds(78, 342, 173, 42);
+    dryWetSlider.setBounds(418, 349, 173, 42);
 
-    syncActive.setBounds(123, 235, 20, 20);
+    syncActive.setBounds(123, 239, 20, 20);
     syncTripletsActive.setBounds(156, 240, 62, 31);
 
-    inputGainSlider.setBounds(418, 55, 173, 42);
-    outputGainSlider.setBounds(418, 423, 173, 42);
+    inputGainSlider.setBounds(418, 65, 173, 42);
+    outputGainSlider.setBounds(418, 434, 173, 42);
 
-    hpfSlider.setBounds(418, 155, 173, 42);
-    lpfSlider.setBounds(418, 228, 173, 42);
+    hpfSlider.setBounds(418, 165, 173, 42);
+    lpfSlider.setBounds(418, 240, 173, 42);
 
-    lfoSlider.setBounds(78, 422, 173, 42);
-    lfoActive.setBounds(225, 399, 20, 20);
+    lfoSlider.setBounds(78, 431, 173, 42);
+    lfoActive.setBounds(225, 410, 20, 20);
+
+    // Ubicación del preset management
+    presetCombo.setBounds(465, 9, 140, 20);
+    savePresetButton.setBounds(614, 9, 50, 20);
+    
+    // presetCombo.setBounds(410, 9, 140, 20);
+    // savePresetButton.setBounds(558, 9, 50, 20);
+	// loadPresetButton.setBounds(614, 9, 50, 20);
 }
 
 void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)
@@ -207,4 +236,54 @@ void MiauDelayAudioProcessorEditor::sliderValueChanged(juce::Slider* s)
     {
         // DBG ("feedbackSlider changed: " << feedbackSlider.getValue());
     }
+}
+
+//==============================================================================
+// Métodos del Preset Management
+//==============================================================================
+
+void MiauDelayAudioProcessorEditor::updatePresetCombo()
+{
+    presetCombo.clear();
+    auto presetList = audioProcessor.getPresetList();
+
+    for (int i = 0; i < presetList.size(); ++i)
+    {
+        presetCombo.addItem(presetList[i], i + 1);
+    }
+
+    // Update the selection to match current preset
+    auto currentPreset = audioProcessor.getCurrentPresetName();
+    if (currentPreset.isNotEmpty())
+    {
+        presetCombo.setText(currentPreset, juce::dontSendNotification);
+    }
+}
+
+void MiauDelayAudioProcessorEditor::savePresetButtonClicked()
+{
+    auto* alertWindow = new juce::AlertWindow("Save Preset", "Enter a name for your preset:", juce::AlertWindow::QuestionIcon);
+    alertWindow->addTextEditor("presetName", "New Preset", "Preset Name:");
+    alertWindow->addButton("Save", 1, juce::KeyPress(juce::KeyPress::returnKey, 0, 0));
+    alertWindow->addButton("Cancel", 0, juce::KeyPress(juce::KeyPress::escapeKey, 0, 0));
+
+    alertWindow->enterModalState(true, juce::ModalCallbackFunction::create([this, alertWindow](int result)
+        {
+            if (result == 1) // if user pressed save
+            {
+                auto presetName = alertWindow->getTextEditorContents("presetName");
+                if (presetName.isNotEmpty())
+                {
+                    audioProcessor.savePreset(presetName);
+                    updatePresetCombo();
+                    presetCombo.setText(presetName, juce::dontSendNotification);
+                }
+            }
+            delete alertWindow;
+        }));
+}
+
+void MiauDelayAudioProcessorEditor::loadPresetButtonClicked()
+{
+    updatePresetCombo(); // Refresh the list in case new presets were added externally
 }

@@ -22,6 +22,8 @@ MiauDelay::MiauDelay()
                        ), apvts(*this, nullptr, "Parameters", createParameters())
 #endif
 {
+    // Crear los presets por defecto en la primera ejecución
+    createDefaultPresets();
 }
 
 MiauDelay::~MiauDelay()
@@ -33,7 +35,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MiauDelay::createParameters(
     juce::AudioProcessorValueTreeState::ParameterLayout parameters;
 //    auto waves = juce::StringArray("Sine", "Square", "Saw", "Triangle");
 
-    // Par�metros del tiempo del delay
+    // Parámetros
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "DelayTime", 1 }, "DelayTime", 0, 5000, 250));
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "DryWet", 1 }, "DryWet", 0.0f, 1.0f, 0.5f));
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "Feedback", 1 }, "Feedback", 0.0f, 0.99f, 0.5f));
@@ -267,6 +269,159 @@ void MiauDelay::setStateInformation (const void* data, int sizeInBytes)
             auto state = juce::ValueTree::fromXml(*xmlState);
             apvts.replaceState(state);
         }
+    }
+}
+
+//==============================================================================
+// Preset Management
+//==============================================================================
+
+juce::File MiauDelay::getPresetDirectory()
+{
+    auto userDocuments = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory);
+    auto presetDir = userDocuments.getChildFile("MiauDelay").getChildFile("Presets");
+
+    if (!presetDir.exists())
+        presetDir.createDirectory();
+
+    return presetDir;
+}
+
+void MiauDelay::savePreset(const juce::String& presetName)
+{
+    auto presetDir = getPresetDirectory();
+    auto presetFile = presetDir.getChildFile(presetName + ".xml");
+
+    // Get current state as XML
+    juce::MemoryBlock memoryBlock;
+    getStateInformation(memoryBlock);
+
+    auto xmlState = getXmlFromBinary(memoryBlock.getData(), static_cast<int>(memoryBlock.getSize()));
+
+    if (xmlState != nullptr)
+    {
+        xmlState->writeTo(presetFile);
+        currentPresetName = presetName;
+    }
+}
+
+void MiauDelay::loadPreset(const juce::String& presetName)
+{
+    auto presetDir = getPresetDirectory();
+    auto presetFile = presetDir.getChildFile(presetName + ".xml");
+
+    if (presetFile.existsAsFile())
+    {
+        auto xmlState = juce::XmlDocument::parse(presetFile);
+
+        if (xmlState != nullptr)
+        {
+            juce::MemoryBlock memoryBlock;
+            copyXmlToBinary(*xmlState, memoryBlock);
+            setStateInformation(memoryBlock.getData(), (int)memoryBlock.getSize());
+            currentPresetName = presetName;
+        }
+    }
+}
+
+juce::StringArray MiauDelay::getPresetList()
+{
+    juce::StringArray presetList;
+    auto presetDir = getPresetDirectory();
+
+    juce::RangedDirectoryIterator iter(presetDir, false, "*.xml");
+
+    for (auto& entry : iter)
+    {
+        auto fileName = entry.getFile().getFileNameWithoutExtension();
+        presetList.add(fileName);
+    }
+
+    presetList.sort(false); // Sort alphabetically
+    return presetList;
+}
+
+void MiauDelay::createDefaultPresets()
+{
+    auto presetDir = getPresetDirectory();
+
+    // Solo crea el default si no existe ningún preset
+    if (getPresetList().isEmpty())
+    {
+        // No están funcionando los valores booleanos
+        // Delay corto (gatito apurado)
+        apvts.getParameter("DelayTime")->setValueNotifyingHost(0.05f);
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.3f);
+        apvts.getParameter("DryWet")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("ActiveLFO")->setValueNotifyingHost(0.0f);
+        savePreset("Gatito Apurado");
+
+        // Eco largo (gato despistado)
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+		apvts.getParameter("DelayTime")->setValueNotifyingHost(0.6f); // 3000 ms
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.6);
+        apvts.getParameter("DryWet")->setValueNotifyingHost(0.5f);
+        savePreset("Gato Despistado");
+
+		// Sync con 1/4 (michi sincronizado)
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(1.0f);
+		apvts.getParameter("SyncTime")->setValueNotifyingHost(0.666f); // 1/4 note (index 2, normalized)
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.4f);
+		savePreset("Michi Sincronizado");
+
+		// Delay con tresillo (aristogato)
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(1.0f);
+		apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("SyncTime")->setValueNotifyingHost(0.666f); // 1/4 note (index 2, normalized)
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.4f);
+        savePreset("Aristogato");
+
+        // Modulador activo (Gato cantor)
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("DelayTime")->setValueNotifyingHost(0.1f);  // 500ms
+        apvts.getParameter("ActiveLFO")->setValueNotifyingHost(1.0f);
+		apvts.getParameter("LFO")->setValueNotifyingHost(0.4f);
+		apvts.getParameter("Feedback")->setValueNotifyingHost(0.5f);
+		savePreset("Gato Cantor");
+        
+        // Modulador activo (Gato ronco)
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("DelayTime")->setValueNotifyingHost(0.05f);  // 500ms
+        apvts.getParameter("ActiveLFO")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("LFO")->setValueNotifyingHost(0.03f);
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("HPFFreq")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LPFFreq")->setValueNotifyingHost(0.0f);
+        savePreset("Gato Ronco");
+
+        // Preset por defecto para guardar en la lista
+        apvts.getParameter("DelayTime")->setValueNotifyingHost(0.05f);
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("DryWet")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("InputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("OutputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("HPFFreq")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LPFFreq")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("ActiveLFO")->setValueNotifyingHost(0.0f);
+        savePreset("Default");
+        
+        
+        // Preset por defecto
+        apvts.getParameter("DelayTime")->setValueNotifyingHost(0.05f);
+		apvts.getParameter("Feedback")->setValueNotifyingHost(0.5f);
+		apvts.getParameter("DryWet")->setValueNotifyingHost(0.5f);
+		apvts.getParameter("InputGain")->setValueNotifyingHost(1.0f);
+		apvts.getParameter("OutputGain")->setValueNotifyingHost(1.0f);
+		apvts.getParameter("HPFFreq")->setValueNotifyingHost(0.0f);
+		apvts.getParameter("LPFFreq")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("ActiveLFO")->setValueNotifyingHost(0.0f);
+		currentPresetName = "Default";  
     }
 }
 
