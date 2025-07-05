@@ -216,7 +216,7 @@ void MiauDelayAudioProcessorEditor::resized()
     outputGainSlider.setBounds(418, 434, 173, 42);
 
     hpfSlider.setBounds(418, 165, 173, 42);
-    lpfSlider.setBounds(418, 240, 173, 42);
+    lpfSlider.setBounds(418, 238, 173, 42);
 
     lfoSlider.setBounds(78, 431, 173, 42);
     lfoActive.setBounds(225, 410, 20, 20);
