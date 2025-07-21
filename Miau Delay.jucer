@@ -19,6 +19,8 @@
       <FILE id="PEOaX1" name="miau.png" compile="0" resource="1" file="Assets/miau.png"/>
       <FILE id="lGpEEx" name="tresillo.png" compile="0" resource="1" file="Assets/tresillo.png"/>
       <FILE id="Rrb1FJ" name="huella.png" compile="0" resource="1" file="Assets/huella.png"/>
+      <FILE id="dY1TSO" name="toggleoff.png" compile="0" resource="1" file="Assets/toggleoff.png"/>
+      <FILE id="TOvb3T" name="toggleon.png" compile="0" resource="1" file="Assets/toggleon.png"/>
     </GROUP>
     <GROUP id="{AC62B72A-AFCB-8D19-B28D-4B0F8F8859AA}" name="DSP">
       <FILE id="yzJBRk" name="Delay.cpp" compile="1" resource="0" file="Source/DSP/Delay.cpp"/>

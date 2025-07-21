@@ -39,9 +39,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout MiauDelay::createParameters(
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "DelayTime", 1 }, "DelayTime", 0, 5000, 250));
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "DryWet", 1 }, "DryWet", 0.0f, 1.0f, 0.5f));
     parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "Feedback", 1 }, "Feedback", 0.0f, 0.99f, 0.5f));
-    parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "InputGain", 1 }, "InputGain", 0.0f, 2.0f, 1.0f));
-    parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "OutputGain", 1 }, "OutputGain", 0.0f, 2.0f, 1.0f));
-    parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "HPFFreq", 1 }, "HPFFreq", 0, 500, 0));
+    parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "InputGain", 1 }, "InputGain", 0.0f, 4.0f, 1.0f));
+    parameters.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "OutputGain", 1 }, "OutputGain", 0.0f, 4.0f, 1.0f));
+    parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "HPFFreq", 1 }, "HPFFreq", 0, 800, 0));
     parameters.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ "LPFFreq", 1 }, "LPFFreq", 2000, 20000, 20000));
     parameters.add(std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ "SyncActive", 1 }, "SyncActive", false));
     parameters.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "SyncTime", 1 }, "SyncTime", juce::StringArray{ "1/16", "1/8", "1/4", "1/2", "1"}, 0));

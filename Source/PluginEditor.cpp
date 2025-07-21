@@ -21,6 +21,7 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor(MiauDelay& p)
     // Delay time slider
     prepareSlider(delayTimeSlider);
     delayTimeAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DelayTime", delayTimeSlider);
+    delayTimeSlider.setTextValueSuffix(" ms");
 
     // Feedback slider
     prepareSlider(feedbackSlider);
@@ -29,22 +30,51 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor(MiauDelay& p)
     // DryWet slider
     prepareSlider(dryWetSlider);
     dryWetAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DryWet", dryWetSlider);
+    // convertir etiqueta de 0-1 a porcentaje
+    dryWetSlider.textFromValueFunction = [](double value)
+        {
+            if (value <= 0.0)
+                return juce::String("0 %");
+            double percentage = value*100;
+            return juce::String(percentage) + " %";
+        };
+    dryWetSlider.updateText();
 
     // inputGain slider
     prepareSlider(inputGainSlider);
     inputGainAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "InputGain", inputGainSlider);
-
+    // convertir etiqueta de 0-1 a dBs
+    inputGainSlider.textFromValueFunction = [](double value)
+        {
+            if (value <= 0.0)
+                return juce::String("-inf dB");
+            double dB = 20.0 * std::log10(value);
+            return juce::String(dB, 1) + " dB";
+        };
+    inputGainSlider.updateText();
+ 
     // outputGain slider
     prepareSlider(outputGainSlider);
     outputGainAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "OutputGain", outputGainSlider);
+    // convertir etiqueta de 0-1 a dBs
+    outputGainSlider.textFromValueFunction = [](double value)
+        {
+            if (value <= 0.0)
+                return juce::String("-inf dB");
+            double dB = 20.0 * std::log10(value);
+            return juce::String(dB, 1) + " dB";
+        };
+    outputGainSlider.updateText();
 
     // hpf slider
     prepareSlider(hpfSlider);
     hpfAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "HPFFreq", hpfSlider);
+    hpfSlider.setTextValueSuffix(" Hz");
 
     // lpf slider
     prepareSlider(lpfSlider);
     lpfAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LPFFreq", lpfSlider);
+    lpfSlider.setTextValueSuffix(" Hz");
 
     // Configurar el componente de tap tempo
     // Callback para actualizar el parámetro DelayTime mapeando newDelayTime de ms a un valor normalizado
@@ -64,7 +94,7 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor(MiauDelay& p)
         {
             updateSliderVisibility();
         };
-    syncActive.setImages(false, true, true, huellaImg, 0.5, juce::Colour(230, 255, 255), huellaImg, 0.5, juce::Colour(230, 255, 255), huellaImg, 0.8, juce::Colour(251, 222, 89));
+    syncActive.setImages(false, true, true, toggleOffImg, 0.9, juce::Colour(), toggleOffImg, 0.9, juce::Colour(), toggleOnImg, 0.9, juce::Colour());
     addAndMakeVisible(syncActive);
 
     // Sync time slider
@@ -93,10 +123,11 @@ MiauDelayAudioProcessorEditor::MiauDelayAudioProcessorEditor(MiauDelay& p)
     // lfo slider
     prepareSlider(lfoSlider);
     lfoAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LFO", lfoSlider);
+    lfoSlider.setTextValueSuffix(" Hz");
 
     // lfo active
     lfoActive.setClickingTogglesState(true);
-    lfoActive.setImages(false, true, true, huellaImg, 0.3, juce::Colour(230, 255, 255), huellaImg, 0.3, juce::Colour(230, 255, 255), huellaImg, 1.0, juce::Colour(251, 222, 89));
+    lfoActive.setImages(false, true, true, toggleOffImg, 0.9, juce::Colour(), toggleOffImg, 0.9, juce::Colour(), toggleOnImg, 0.9, juce::Colour());
     lfoActiveAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "ActiveLFO", lfoActive);
     addAndMakeVisible(lfoActive);
 
@@ -186,10 +217,10 @@ void MiauDelayAudioProcessorEditor::prepareSlider(juce::Slider& slider)
 {
     slider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
     slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 55, 20);
-    addAndMakeVisible(slider);
-
+   
     slider.setLookAndFeel(&sliderLookAndFeel);
-    slider.addListener(this);
+    slider.addListener(this); 
+    addAndMakeVisible(slider);
 }
 
 //==============================================================================
@@ -205,12 +236,12 @@ void MiauDelayAudioProcessorEditor::resized()
     delayTimeSlider.setBounds(78, 174, 173, 42);
     syncTimeSlider.setBounds(78, 174, 173, 42);
 
-    tapTempoComp.setBounds(49, 244, 20, 20);
+    tapTempoComp.setBounds(50, 244, 20, 20);
     feedbackSlider.setBounds(78, 342, 173, 42);
     dryWetSlider.setBounds(418, 349, 173, 42);
 
-    syncActive.setBounds(123, 239, 20, 20);
-    syncTripletsActive.setBounds(156, 240, 62, 31);
+    syncActive.setBounds(114, 247, 33, 15);
+    syncTripletsActive.setBounds(154, 250, 62, 31);
 
     inputGainSlider.setBounds(418, 65, 173, 42);
     outputGainSlider.setBounds(418, 434, 173, 42);
@@ -219,7 +250,7 @@ void MiauDelayAudioProcessorEditor::resized()
     lpfSlider.setBounds(418, 238, 173, 42);
 
     lfoSlider.setBounds(78, 431, 173, 42);
-    lfoActive.setBounds(225, 410, 20, 20);
+    lfoActive.setBounds(205, 416, 33, 15);
 
     // Ubicación del preset management
     presetCombo.setBounds(465, 9, 140, 20);

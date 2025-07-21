@@ -79,6 +79,8 @@ public:
     // Inicializar los presets por defecto
     void createDefaultPresets();
 
+    void parameterChanged(const juce::String& parameterID, float newValue);
+
 private:
     Delay delay;
     DryWet dryWet;

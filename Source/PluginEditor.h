@@ -66,6 +66,9 @@ private:
     juce::ImageComponent backgroundComponent;
 
     juce::Image huellaImg{ juce::ImageCache::getFromMemory(BinaryData::huella_png, BinaryData::huella_pngSize) };
+    juce::Image toggleOnImg{ juce::ImageCache::getFromMemory(BinaryData::toggleon_png, BinaryData::toggleon_pngSize) };
+    juce::Image toggleOffImg{ juce::ImageCache::getFromMemory(BinaryData::toggleoff_png, BinaryData::toggleoff_pngSize) };
+
     juce::Image tresilloImg{ juce::ImageCache::getFromMemory(BinaryData::tresillo_png, BinaryData::tresillo_pngSize) };
 
 
