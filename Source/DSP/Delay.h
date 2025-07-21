@@ -34,6 +34,6 @@ private:
 	int mSampleRate{ 44100 };
 
 	int delayTimeMsValue;
-	float mFeedback{ 0.7f };
 
+	juce::LinearSmoothedValue<float> mFeedback{ 0.7f }; // valor de feedback suavizado
 };

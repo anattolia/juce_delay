@@ -64,7 +64,9 @@
   <EXPORTFORMATS>
     <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="Miau Delay" enablePluginBinaryCopyStep="1"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Miau Delay" enablePluginBinaryCopyStep="1"
+                       vst3BinaryLocation_Win32="&quot;C:\Program Files\Common Files\VST3&quot;"
+                       winArchitecture="x64"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="NewProject"/>
       </CONFIGURATIONS>
       <MODULEPATHS>

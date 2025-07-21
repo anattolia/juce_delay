@@ -122,10 +122,11 @@ void MiauDelay::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     juce::dsp::ProcessSpec spec;
 
-    // �Esto hace falta?
     spec.sampleRate = sampleRate;
     spec.numChannels = getTotalNumOutputChannels();
     spec.maximumBlockSize = samplesPerBlock;
+
+    inputGain.prepare(sampleRate);
 
 	delay.prepare(sampleRate, samplesPerBlock);
     hpf.prepare(spec);
@@ -181,6 +182,7 @@ void MiauDelay::updateParameters()
     int inSyncTripletsActive = *apvts.getRawParameterValue("SyncTripletsActive");
    
     const float pi = juce::MathConstants<float>::pi;
+
 
     if (inSyncActive)	
     {

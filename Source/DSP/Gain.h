@@ -19,7 +19,8 @@ public:
 
     void setGainValue(float newGainValue);
     void process(juce::AudioBuffer<float>& buffer);
+    void prepare(double sampleRate);
 
 private:
-    float gainValue { 1.0f };
+    juce::LinearSmoothedValue<float> gainValue{ 1.0f };
 };
