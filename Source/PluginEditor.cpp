@@ -233,28 +233,28 @@ void MiauDelayAudioProcessorEditor::resized()
     backgroundComponent.setBounds(getLocalBounds());
 
     // Poner los sliders del delaytime en ms y en figuras en la misma posición 
-    delayTimeSlider.setBounds(78, 174, 173, 42);
-    syncTimeSlider.setBounds(78, 174, 173, 42);
+    delayTimeSlider.setBounds(78, 160, 173, 42);
+    syncTimeSlider.setBounds(78, 160, 173, 42);
 
-    tapTempoComp.setBounds(50, 244, 20, 20);
-    feedbackSlider.setBounds(78, 342, 173, 42);
-    dryWetSlider.setBounds(418, 349, 173, 42);
+    tapTempoComp.setBounds(50, 234, 20, 20);
+    feedbackSlider.setBounds(78, 339, 173, 42);
+    dryWetSlider.setBounds(418, 358, 173, 42);
 
-    syncActive.setBounds(114, 247, 33, 15);
-    syncTripletsActive.setBounds(154, 250, 62, 31);
+    syncActive.setBounds(115, 237, 33, 15);
+    syncTripletsActive.setBounds(154, 238, 62, 31);
 
-    inputGainSlider.setBounds(418, 65, 173, 42);
-    outputGainSlider.setBounds(418, 434, 173, 42);
+    inputGainSlider.setBounds(418, 59, 173, 42);
+    outputGainSlider.setBounds(418, 426, 173, 42);
 
-    hpfSlider.setBounds(418, 165, 173, 42);
-    lpfSlider.setBounds(418, 238, 173, 42);
+    hpfSlider.setBounds(418, 158, 173, 42);
+    lpfSlider.setBounds(418, 230, 173, 42);
 
-    lfoSlider.setBounds(78, 431, 173, 42);
-    lfoActive.setBounds(205, 416, 33, 15);
+    lfoSlider.setBounds(78, 426, 173, 42);
+    lfoActive.setBounds(205, 410, 33, 15);
 
     // Ubicación del preset management
-    presetCombo.setBounds(465, 9, 140, 20);
-    savePresetButton.setBounds(614, 9, 50, 20);
+    presetCombo.setBounds(467, 6, 140, 16);
+    savePresetButton.setBounds(616, 6, 50, 18);
     
     // presetCombo.setBounds(410, 9, 140, 20);
     // savePresetButton.setBounds(558, 9, 50, 20);
@@ -283,7 +283,7 @@ void MiauDelayAudioProcessorEditor::updatePresetCombo()
         presetCombo.addItem(presetList[i], i + 1);
     }
 
-    // Update the selection to match current preset
+    // ACtualizar la selección para que coincida con el preset actual
     auto currentPreset = audioProcessor.getCurrentPresetName();
     if (currentPreset.isNotEmpty())
     {
@@ -300,7 +300,7 @@ void MiauDelayAudioProcessorEditor::savePresetButtonClicked()
 
     alertWindow->enterModalState(true, juce::ModalCallbackFunction::create([this, alertWindow](int result)
         {
-            if (result == 1) // if user pressed save
+            if (result == 1) // si el usuario presiona save
             {
                 auto presetName = alertWindow->getTextEditorContents("presetName");
                 if (presetName.isNotEmpty())

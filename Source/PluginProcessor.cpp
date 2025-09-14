@@ -355,47 +355,93 @@ void MiauDelay::createDefaultPresets()
         apvts.getParameter("DelayTime")->setValueNotifyingHost(0.05f);
         apvts.getParameter("Feedback")->setValueNotifyingHost(0.3f);
         apvts.getParameter("DryWet")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("InputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("OutputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("HPFFreq")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LPFFreq")->setValueNotifyingHost(1.0f);
         apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("SyncTime")->setValueNotifyingHost(0.666f); // 1/4 note (index 2, normalized)
         apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(0.0f);
         apvts.getParameter("ActiveLFO")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LFO")->setValueNotifyingHost(0.4f);
         savePreset("Gatito Apurado");
 
         // Eco largo (gato despistado)
-        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
-		apvts.getParameter("DelayTime")->setValueNotifyingHost(0.6f); // 3000 ms
+        apvts.getParameter("DelayTime")->setValueNotifyingHost(0.6f); // 3000 ms
         apvts.getParameter("Feedback")->setValueNotifyingHost(0.6);
         apvts.getParameter("DryWet")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("InputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("OutputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("HPFFreq")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LPFFreq")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("SyncTime")->setValueNotifyingHost(0.666f); // 1/4 note (index 2, normalized)
+        apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("ActiveLFO")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LFO")->setValueNotifyingHost(0.4f);
         savePreset("Gato Despistado");
 
 		// Sync con 1/4 (michi sincronizado)
+        apvts.getParameter("DelayTime")->setValueNotifyingHost(0.6f); // 3000 ms
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.4f);
+        apvts.getParameter("DryWet")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("InputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("OutputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("HPFFreq")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LPFFreq")->setValueNotifyingHost(1.0f);
         apvts.getParameter("SyncActive")->setValueNotifyingHost(1.0f);
 		apvts.getParameter("SyncTime")->setValueNotifyingHost(0.666f); // 1/4 note (index 2, normalized)
-        apvts.getParameter("Feedback")->setValueNotifyingHost(0.4f);
+        apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("ActiveLFO")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LFO")->setValueNotifyingHost(0.4f);
+        
 		savePreset("Michi Sincronizado");
 
 		// Delay con tresillo (aristogato)
-        apvts.getParameter("SyncActive")->setValueNotifyingHost(1.0f);
-		apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(1.0f);
-        apvts.getParameter("SyncTime")->setValueNotifyingHost(0.666f); // 1/4 note (index 2, normalized)
+        apvts.getParameter("DelayTime")->setValueNotifyingHost(0.6f); // 3000 ms
         apvts.getParameter("Feedback")->setValueNotifyingHost(0.4f);
+        apvts.getParameter("DryWet")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("InputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("OutputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("HPFFreq")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LPFFreq")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("SyncTime")->setValueNotifyingHost(0.666f); // 1/4 note (index 2, normalized)
+		apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("ActiveLFO")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LFO")->setValueNotifyingHost(0.4f);
+     
         savePreset("Aristogato");
 
         // Modulador activo (Gato cantor)
-        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
         apvts.getParameter("DelayTime")->setValueNotifyingHost(0.1f);  // 500ms
+        apvts.getParameter("Feedback")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("DryWet")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("InputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("OutputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("HPFFreq")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LPFFreq")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("SyncTime")->setValueNotifyingHost(0.666f); // 1/4 note (index 2, normalized)
+        apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(1.0f);
         apvts.getParameter("ActiveLFO")->setValueNotifyingHost(1.0f);
 		apvts.getParameter("LFO")->setValueNotifyingHost(0.4f);
-		apvts.getParameter("Feedback")->setValueNotifyingHost(0.5f);
 		savePreset("Gato Cantor");
         
         // Modulador activo (Gato ronco)
-        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
         apvts.getParameter("DelayTime")->setValueNotifyingHost(0.05f);  // 500ms
-        apvts.getParameter("ActiveLFO")->setValueNotifyingHost(1.0f);
-        apvts.getParameter("LFO")->setValueNotifyingHost(0.03f);
         apvts.getParameter("Feedback")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("DryWet")->setValueNotifyingHost(0.5f);
+        apvts.getParameter("InputGain")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("OutputGain")->setValueNotifyingHost(1.0f);
         apvts.getParameter("HPFFreq")->setValueNotifyingHost(0.0f);
         apvts.getParameter("LPFFreq")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("SyncTime")->setValueNotifyingHost(0.666f); // 1/4 note (index 2, normalized)
+        apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("ActiveLFO")->setValueNotifyingHost(1.0f);
+        apvts.getParameter("LFO")->setValueNotifyingHost(0.03f);
+
         savePreset("Gato Ronco");
 
         // Preset por defecto para guardar en la lista
@@ -407,8 +453,10 @@ void MiauDelay::createDefaultPresets()
         apvts.getParameter("HPFFreq")->setValueNotifyingHost(0.0f);
         apvts.getParameter("LPFFreq")->setValueNotifyingHost(1.0f);
         apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("SyncTime")->setValueNotifyingHost(0.666f); // 1/4 note (index 2, normalized)
         apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(0.0f);
         apvts.getParameter("ActiveLFO")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LFO")->setValueNotifyingHost(0.4f);
         savePreset("Default");
         
         
@@ -421,8 +469,10 @@ void MiauDelay::createDefaultPresets()
 		apvts.getParameter("HPFFreq")->setValueNotifyingHost(0.0f);
 		apvts.getParameter("LPFFreq")->setValueNotifyingHost(1.0f);
         apvts.getParameter("SyncActive")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("SyncTime")->setValueNotifyingHost(0.666f); // 1/4 note (index 2, normalized)
         apvts.getParameter("SyncTripletsActive")->setValueNotifyingHost(0.0f);
         apvts.getParameter("ActiveLFO")->setValueNotifyingHost(0.0f);
+        apvts.getParameter("LFO")->setValueNotifyingHost(0.4f);
 		currentPresetName = "Default";  
     }
 }
